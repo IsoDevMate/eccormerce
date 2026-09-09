@@ -1,0 +1,116 @@
+"use client";
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+
+export type CartLine = {
+  key: string;
+  productId: string;
+  slug: string;
+  name: string;
+  line: string;
+  image: string;
+  color: string;
+  colorHex: string;
+  size: string;
+  price: number;
+  quantity: number;
+  giftWrap?: boolean;
+};
+
+type CartContextValue = {
+  lines: CartLine[];
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  addLine: (line: Omit<CartLine, "key" | "quantity"> & { quantity?: number }) => void;
+  removeLine: (key: string) => void;
+  setQuantity: (key: string, quantity: number) => void;
+  setGiftWrap: (key: string, giftWrap: boolean) => void;
+  count: number;
+  subtotal: number;
+};
+
+const CartContext = createContext<CartContextValue | null>(null);
+const STORAGE_KEY = "sable-cart";
+
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [lines, setLines] = useState<CartLine[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+    } catch {
+      /* ignore */
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+  }, [lines, hydrated]);
+
+  const value = useMemo<CartContextValue>(() => {
+    const addLine: CartContextValue["addLine"] = (incoming) => {
+      const key = `${incoming.productId}-${incoming.color}-${incoming.size}`;
+      setLines((current) => {
+        const existing = current.find((line) => line.key === key);
+        if (existing) {
+          return current.map((line) =>
+            line.key === key
+              ? { ...line, quantity: line.quantity + (incoming.quantity ?? 1) }
+              : line,
+          );
+        }
+        return [
+          ...current,
+          { ...incoming, key, quantity: incoming.quantity ?? 1 },
+        ];
+      });
+      setIsOpen(true);
+    };
+
+    return {
+      lines,
+      isOpen,
+      openCart: () => setIsOpen(true),
+      closeCart: () => setIsOpen(false),
+      addLine,
+      removeLine: (key) =>
+        setLines((current) => current.filter((line) => line.key !== key)),
+      setQuantity: (key, quantity) =>
+        setLines((current) =>
+          quantity <= 0
+            ? current.filter((line) => line.key !== key)
+            : current.map((line) =>
+                line.key === key ? { ...line, quantity } : line,
+              ),
+        ),
+      setGiftWrap: (key, giftWrap) =>
+        setLines((current) =>
+          current.map((line) =>
+            line.key === key ? { ...line, giftWrap } : line,
+          ),
+        ),
+      count: lines.reduce((sum, line) => sum + line.quantity, 0),
+      subtotal: lines.reduce((sum, line) => sum + line.price * line.quantity, 0),
+    };
+  }, [lines, isOpen]);
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
+
+export function useCart() {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used inside CartProvider");
+  return ctx;
+}
