@@ -28,6 +28,9 @@ for (const vp of viewports) {
   const page = await browser.newPage({
     viewport: { width: vp.width, height: vp.height },
   });
+  await page.addInitScript(() => {
+    localStorage.setItem("sable-cookie-consent", "rejected");
+  });
   for (const route of routes) {
     await page.goto(base + route.path, { waitUntil: "networkidle" });
     await page.waitForTimeout(800);

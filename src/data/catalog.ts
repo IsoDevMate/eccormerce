@@ -113,8 +113,6 @@ export const products: Product[] = [
     },
     fit: "slim",
     shippingDays: { min: 3, max: 6 },
-    // TODO(design): replace with real Sable footage before launch
-    video: "/media/featured-slip.mp4",
     variants: [
       {
         id: "slip-clay",
@@ -123,12 +121,12 @@ export const products: Product[] = [
         sizes: wSizes(["XXS"]),
         images: [
           {
-            src: u("photo-1515886657613-9f3515b0c78f"),
+            src: u("photo-1566174053879-31528523f8ae"),
             alt: "Model wearing the long slip in clay",
             kind: "model",
           },
           {
-            src: u("photo-1566174053879-31528523f8ae"),
+            src: u("photo-1620799139507-2a76f79a2f4d"),
             alt: "Slip dress studio still",
             kind: "studio",
           },
@@ -156,7 +154,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1539109136881-3be0616ffa6c"),
+            src: u("photo-1529139574466-a303027c1d8b"),
             alt: "Ink slip, studio",
             kind: "studio",
           },
@@ -210,7 +208,7 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1521577352947-9bb5873b8bb0"),
+            src: u("photo-1441984904996-e0b6ba687e04"),
             alt: "Rib tank in ink on model",
             kind: "model",
           },
@@ -287,7 +285,7 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1578932750294-f5075d6b5f65"),
+            src: u("photo-1494790108377-be9c29b29330"),
             alt: "Ink heavy tee on Jun",
             kind: "model",
           },
@@ -351,7 +349,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1506629082955-511b1aa78284"),
+            src: u("photo-1519741497674-611481863552"),
             alt: "Ink knit, folded",
             kind: "studio",
           },
@@ -396,12 +394,12 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", false]),
         images: [
           {
-            src: u("photo-1542272604-787c59578f2e"),
+            src: u("photo-1595777457583-95e059d581b8"),
             alt: "Wool overcoat in camel, walking",
             kind: "model",
           },
           {
-            src: u("photo-1501196354221-8d93340c4178"),
+            src: u("photo-1572804013309-59a88b7e92f1"),
             alt: "Overcoat on hanger",
             kind: "studio",
           },
@@ -414,7 +412,7 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", true]),
         images: [
           {
-            src: u("photo-1541099645347-66d1766432c1"),
+            src: u("photo-1554568218-0f1715e72254"),
             alt: "Ink overcoat on Amira",
             kind: "model",
           },
@@ -455,12 +453,12 @@ export const products: Product[] = [
         sizes: wSizes(["1X"]),
         images: [
           {
-            src: u("photo-1556828112-4bba69c8e5b0"),
+            src: u("photo-1503342217505-b0a15ec3261c"),
             alt: "Tailored trouser in sand",
             kind: "model",
           },
           {
-            src: u("photo-1617137984095-73e40dfe8b10"),
+            src: u("photo-1521572163474-6864f9cf17ab"),
             alt: "Trouser studio",
             kind: "studio",
           },
@@ -478,7 +476,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1487222477890-753e22f77c25"),
+            src: u("photo-1603252109303-2751441dd157"),
             alt: "Ink trouser flat",
             kind: "studio",
           },
@@ -518,7 +516,7 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", true]),
         images: [
           {
-            src: u("photo-1583743814966-893c1b508804"),
+            src: u("photo-1611312449408-fcece27cdbb7"),
             alt: "Lounge short in ink",
             kind: "model",
           },
@@ -617,8 +615,6 @@ export const products: Product[] = [
     },
     fit: "relaxed",
     shippingDays: { min: 2, max: 5 },
-    // TODO(design): replace with real Sable footage before launch
-    video: "/media/featured-crew.mp4",
     variants: [
       {
         id: "tsm-ink",
@@ -637,7 +633,7 @@ export const products: Product[] = [
             kind: "studio",
           },
           {
-            src: u("photo-1588850561407-739547b4be9c"),
+            src: u("photo-1539533018447-63fcce2678e3"),
             alt: "Crew collar detail",
             kind: "detail",
           },
@@ -655,7 +651,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1624222247344-550fb60583c2"),
+            src: u("photo-1558769132-cb1aea458c5e"),
             alt: "Bone tee stack",
             kind: "studio",
           },
@@ -696,7 +692,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1485968579580-733a9f9f2a55"),
+            src: u("photo-1560243563-062bfc001d68"),
             alt: "LS-03 studio",
             kind: "studio",
           },
@@ -772,7 +768,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1618354691438-25bc045586c7"),
+            src: u("photo-1576188973526-0e5d7047b0cf"),
             alt: "Ash hoodie flat",
             kind: "studio",
           },
@@ -1011,7 +1007,7 @@ export const products: Product[] = [
             kind: "model",
           },
           {
-            src: u("photo-1520975661595-6453be9abf95"),
+            src: u("photo-1601924994987-69e26d50dc26"),
             alt: "Cap studio",
             kind: "studio",
           },
@@ -1061,7 +1057,7 @@ export const products: Product[] = [
             kind: "studio",
           },
           {
-            src: u("photo-1603252109612-24fa03d33425"),
+            src: u("photo-1612423284934-2850a4ea6b0f"),
             alt: "Belt worn",
             kind: "model",
           },
@@ -1099,12 +1095,12 @@ export const products: Product[] = [
         sizes: sizes(["S", false], ["M", false], ["L", false], ["XL", false]),
         images: [
           {
-            src: u("photo-1562157873-818bc0726f69"),
+            src: u("photo-1631541909061-71e349d1f203"),
             alt: "Field jacket preview",
             kind: "studio",
           },
           {
-            src: u("photo-1509631179647-0177331693af"),
+            src: u("photo-1581655353564-df123a1eb820"),
             alt: "Field jacket on body, lookbook",
             kind: "model",
           },

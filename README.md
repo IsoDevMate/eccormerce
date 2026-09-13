@@ -49,9 +49,9 @@ Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md). Artifacts go to `.local/visua
 - Thank-you page (checkout validates; no `alert`)
 - Loading states, form error states
 - Sticky mobile ATC on PDP
-- Featured PLP video on index-0 products (`public/media/`)
+- Featured PLP video when real Sable footage exists (placeholder globe clips removed after visual QA)
 - Badge discipline: 1 Best Seller, 1 New, 1 Limited
-- Unique Unsplash IDs per image slot (q=70 + Next Image AVIF/WebP)
+- Unique Unsplash IDs per image slot (q=70 + Next Image AVIF/WebP); dead IDs replaced after Playwright smoke
 
 Still stand-in photography — a real shoot replaces Unsplash before a serious launch.
 

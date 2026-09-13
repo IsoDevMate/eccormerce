@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Category, Gender, Product } from "@/types/product";
-import { categories, popularFilters, type PopularFilter } from "@/lib/catalog";
+import { categories } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart-store";
@@ -42,7 +42,6 @@ export function ProductListing({
   const [sort, setSort] = useState<SortKey>("featured");
   const [category, setCategory] = useState<Category | "all">("all");
   const [gender, setGender] = useState<GenderTab>(initialGender);
-  const [popular, setPopular] = useState<PopularFilter | null>(null);
   const [color, setColor] = useState<string | null>(null);
 
   const colors = useMemo(() => {
@@ -70,29 +69,13 @@ export function ProductListing({
         product.variants.some((variant) => variant.name === color),
       );
     }
-    if (popular === "new") {
-      list = list.filter((product) => product.badge === "New");
-    }
-    if (popular === "best") {
-      list = list.filter((product) => product.badge === "Best Seller");
-    }
-    if (popular === "under150") {
-      list = list.filter((product) => product.price < 15000);
-    }
-    if (popular === "in-stock") {
-      list = list.filter((product) =>
-        product.variants.some((variant) =>
-          variant.sizes.some((size) => size.inStock),
-        ),
-      );
-    }
     if (sort === "newest") {
       list.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
     if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, gender, category, color, popular, sort]);
+  }, [products, gender, category, color, sort]);
 
   const rail = categories.filter((item) =>
     products.some((product) => product.category === item.id),
@@ -145,73 +128,34 @@ export function ProductListing({
         ) : null}
       </section>
 
-      <div className="border-b border-line">
-        <div className="flex gap-3 overflow-x-auto px-4 py-4 md:px-6">
+      <div className="sticky top-[52px] z-20 border-b border-line bg-paper/95 backdrop-blur-sm">
+        <div className="flex gap-4 overflow-x-auto px-4 py-3 md:px-6">
           <button
             type="button"
             onClick={() => setCategory("all")}
             className={cn(
-              "micro shrink-0 border px-3 py-2",
-              category === "all" ? "border-ink bg-ink text-paper" : "border-line",
+              "micro shrink-0",
+              category === "all" ? "underline" : "text-muted",
             )}
           >
             All
           </button>
-          {rail.map((item) => {
-            const thumb = products.find((p) => p.category === item.id)
-              ?.variants[0]?.images[0];
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setCategory(item.id)}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 border px-2 py-1.5",
-                  category === item.id
-                    ? "border-ink bg-ink text-paper"
-                    : "border-line",
-                )}
-              >
-                {thumb ? (
-                  <Image
-                    src={thumb.src}
-                    alt={item.label}
-                    width={36}
-                    height={44}
-                    className="h-11 w-9 object-cover"
-                  />
-                ) : null}
-                <span className="micro pr-2">{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="sticky top-[52px] z-20 flex flex-wrap items-center gap-3 border-b border-line bg-paper/95 px-4 py-3 backdrop-blur-sm md:px-6">
-        <div className="flex flex-wrap gap-2">
-          {popularFilters.map((filter) => (
+          {rail.map((item) => (
             <button
-              key={filter.id}
+              key={item.id}
               type="button"
-              onClick={() =>
-                setPopular((current) =>
-                  current === filter.id ? null : filter.id,
-                )
-              }
+              onClick={() => setCategory(item.id)}
               className={cn(
-                "micro border px-3 py-1.5",
-                popular === filter.id
-                  ? "border-ink bg-ink text-paper"
-                  : "border-line",
+                "micro shrink-0",
+                category === item.id ? "underline" : "text-muted",
               )}
             >
-              {filter.label}
+              {item.label}
             </button>
           ))}
         </div>
-        <div className="ml-auto flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-1" aria-label="Sort">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line px-4 py-2 md:px-6">
+          <div className="flex gap-3" aria-label="Sort">
             {(
               [
                 ["featured", "Featured"],
@@ -225,7 +169,7 @@ export function ProductListing({
                 type="button"
                 onClick={() => setSort(key)}
                 className={cn(
-                  "micro px-1 py-1",
+                  "micro",
                   sort === key ? "underline" : "text-muted",
                 )}
               >
@@ -233,79 +177,82 @@ export function ProductListing({
               </button>
             ))}
           </div>
-          <div className="flex border border-line" role="group" aria-label="Setting">
-            {(["worn", "studio"] as const).map((value) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setSetting(value)}
-                className={cn(
-                  "micro px-3 py-1.5",
-                  setting === value ? "bg-ink text-paper" : "",
-                )}
-              >
-                {value === "worn" ? "Worn" : "Studio"}
-              </button>
-            ))}
-          </div>
-          <div className="flex border border-line" role="group" aria-label="Grid density">
-            {([2, 4] as const).map((value) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setDensity(value)}
-                className={cn(
-                  "micro hidden px-3 py-1.5 md:inline",
-                  density === value ? "bg-ink text-paper" : "",
-                )}
-              >
-                {value}
-              </button>
-            ))}
-            {([1, 2] as const).map((value) => (
-              <button
-                key={`m-${value}`}
-                type="button"
-                onClick={() => setDensity(value === 1 ? 1 : 2)}
-                className={cn(
-                  "micro px-3 py-1.5 md:hidden",
-                  (value === 1 && density === 1) || (value === 2 && density !== 1)
-                    ? "bg-ink text-paper"
-                    : "",
-                )}
-              >
-                {value}
-              </button>
-            ))}
+          <div className="ml-auto flex items-center gap-3">
+            <div className="flex gap-2" role="group" aria-label="Setting">
+              {(["worn", "studio"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setSetting(value)}
+                  className={cn(
+                    "micro",
+                    setting === value ? "underline" : "text-muted",
+                  )}
+                >
+                  {value === "worn" ? "Worn" : "Studio"}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-2" role="group" aria-label="Grid density">
+              {([2, 4] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setDensity(value)}
+                  className={cn(
+                    "micro hidden md:inline",
+                    density === value ? "underline" : "text-muted",
+                  )}
+                >
+                  {value}
+                </button>
+              ))}
+              {([1, 2] as const).map((value) => (
+                <button
+                  key={`m-${value}`}
+                  type="button"
+                  onClick={() => setDensity(value === 1 ? 1 : 2)}
+                  className={cn(
+                    "micro md:hidden",
+                    (value === 1 && density === 1) ||
+                      (value === 2 && density !== 1)
+                      ? "underline"
+                      : "text-muted",
+                  )}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto border-b border-line px-4 py-3 md:px-6">
-        <button
-          type="button"
-          onClick={() => setColor(null)}
-          className={cn("micro px-2 py-1", !color && "underline")}
-        >
-          All colors
-        </button>
-        {colors.map(([name, hex]) => (
+        <div className="flex gap-3 overflow-x-auto border-t border-line px-4 py-2 md:px-6">
           <button
-            key={name}
             type="button"
-            onClick={() => setColor(name === color ? null : name)}
-            className={cn(
-              "flex items-center gap-2 px-2 py-1 text-sm",
-              color === name && "underline",
-            )}
+            onClick={() => setColor(null)}
+            className={cn("micro shrink-0", !color && "underline")}
           >
-            <span
-              className="h-3 w-3 border border-ink"
-              style={{ backgroundColor: hex }}
-            />
-            {name}
+            Colour
           </button>
-        ))}
+          {colors.map(([name, hex]) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => setColor(name === color ? null : name)}
+              className={cn(
+                "flex shrink-0 items-center gap-1.5 text-sm",
+                color === name ? "underline" : "text-muted",
+              )}
+              title={name}
+            >
+              <span
+                className="h-3 w-3 border border-ink"
+                style={{ backgroundColor: hex }}
+              />
+              <span className="hidden md:inline">{name}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div

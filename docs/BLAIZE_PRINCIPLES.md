@@ -12,9 +12,9 @@ Use these as **commercial constraints**, not as “make it look like Yeezy/Skims
 ## Merchandising
 
 - Model shots beat flat lays when the garment matches the product.
-- Featured video on a top-left / early grid cell helps scanning — only with real footage.
+- Featured video on a top-left / early grid cell helps scanning — **only with real garment footage** (never a random placeholder clip).
 - Badges are rare (scarcity dies when everything is “Limited”).
-- Filters earn their keep as catalogue size grows; don’t build an admin dashboard for 26 pieces.
+- Filters earn their keep as catalogue size grows; don’t build an admin dashboard for 26 pieces. Prefer quiet text filters over thumbnail chrome.
 
 ## Conversion without screaming “BUY”
 

@@ -26,7 +26,7 @@ export default function HomePage() {
         body: "Model shots first. Studio if you want the block without a body. The grid is the store — no homepage in the way.",
         href: "/product/long-slip-dress",
         image:
-          "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=1200&q=70",
+          "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1200&q=70",
       }}
     />
   );
