@@ -39,3 +39,5 @@ Ask of every screen:
 4. Conversion — size, colour, ship, CTA clear?
 5. AOV — natural next click, not spam upsells?
 6. Friction — remove chrome that doesn’t sell or reassure?
+
+Then verify with Playwright — see [`VISUAL_QA.md`](./VISUAL_QA.md). Current shipped vs open: [`STATUS.md`](./STATUS.md).

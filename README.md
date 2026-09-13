@@ -8,12 +8,22 @@ Next.js 15 + TypeScript + Tailwind 4. Small-catalogue house: **the grid is the s
 
 ---
 
-## Information architecture (Blaize / Yeezy small-store rule)
+## Docs
+
+| Doc | What |
+|-----|------|
+| [`docs/BLAIZE_PRINCIPLES.md`](docs/BLAIZE_PRINCIPLES.md) | Commercial principles from Blaize / Yeezy–Skims breakdown (not brand clones) |
+| [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md) | Playwright screenshots + frame extract — **required before calling UI done** |
+| [`docs/STATUS.md`](docs/STATUS.md) | What’s shipped, what’s still open |
+
+---
+
+## Information architecture
 
 | Route | Job |
 |-------|-----|
 | `/` | **Product grid** — All / Women / Men tabs, zero splash before clothes |
-| `/shop` | Redirects to `/` (config + page) |
+| `/shop` | Redirects to `/` (`next.config` + page) |
 | `/shop/women` · `/shop/men` | Gendered PLPs (ads/email land here) |
 | `/shop/new` | New arrivals |
 | `/shop/archive` | Full / line-filtered archive |
@@ -24,34 +34,35 @@ Next.js 15 + TypeScript + Tailwind 4. Small-catalogue house: **the grid is the s
 
 Nav: **New → Shop → Women → Men**.
 
-Principles (not brand clones): [`docs/BLAIZE_PRINCIPLES.md`](docs/BLAIZE_PRINCIPLES.md)
-
 ---
 
 ## Visual QA (required)
 
-Do **not** ship UI changes from code-only review. Capture and look at screenshots:
+Do **not** ship UI changes from code-only review:
 
 ```bash
-npm run visual:smoke
+npm run dev          # terminal 1
+npm run visual:smoke # terminal 2 — writes .local/visual/sable/*.png
 ```
 
-Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md). Artifacts go to `.local/visual/` (gitignored).
+Open the PNGs. Judge desire, hierarchy, and broken media — not “does the component exist.”
+
+Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md).
 
 ---
 
 ## Ship-ready checklist
 
-- Custom 404, per-route titles + descriptions, OG image, favicon icon
+- Custom 404, per-route titles + descriptions, OG image, favicon
 - robots.txt + sitemap.xml
 - Cookie banner + consent-gated Vercel Analytics
 - Privacy + Terms with real London address (18 Great Portland Street, W1W 8QP)
 - Thank-you page (checkout validates; no `alert`)
-- Loading states, form error states
-- Sticky mobile ATC on PDP
-- Featured PLP video when real Sable footage exists (placeholder globe clips removed after visual QA)
+- Loading states, form error states, sticky mobile ATC
+- Quiet PLP filters (text categories / colour / sort — no thumbnail dashboard)
 - Badge discipline: 1 Best Seller, 1 New, 1 Limited
-- Unique Unsplash IDs per image slot (q=70 + Next Image AVIF/WebP); dead IDs replaced after Playwright smoke
+- Catalog images: unique Unsplash IDs, dead URLs replaced after Playwright smoke
+- Featured PLP video **only when real garment footage exists** (globe placeholders removed)
 
 Still stand-in photography — a real shoot replaces Unsplash before a serious launch.
 
@@ -62,5 +73,6 @@ Still stand-in photography — a real shoot replaces Unsplash before a serious l
 - Catalog: `src/data/catalog.ts`
 - Cart: `src/lib/cart-store.tsx` (localStorage)
 - DB stub: `src/lib/db/` (Turso not wired)
+- Visual smoke: `scripts/visual-smoke.mjs`
 
 Env: see `.env.example` (`NEXT_PUBLIC_SITE_URL`, Turso).
