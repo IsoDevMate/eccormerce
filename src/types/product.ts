@@ -38,6 +38,16 @@ export type Measurement = {
   sleeve?: number;
 };
 
+export type HowToStep = {
+  title: string;
+  body: string;
+};
+
+export type FaqItem = {
+  q: string;
+  a: string;
+};
+
 export type Product = {
   id: string;
   slug: string;
@@ -51,6 +61,9 @@ export type Product = {
   badge?: "New" | "Best Seller" | "Limited";
   description: string;
   highlights: string[];
+  chips?: string[];
+  howTo?: HowToStep[];
+  faq?: FaqItem[];
   materials: string;
   care: string;
   model: { name: string; heightCm: number; size: string };

@@ -1,111 +1,66 @@
 # Sable — premium store
 
-Next.js 15 + TypeScript + Tailwind 4 store. UI-first build toward a hybrid performance/brand experience (Stüssy × Le Labo principles), with Turso/SQLite planned for persistence.
+Next.js 15 + TypeScript + Tailwind 4. Small-catalogue house: **the grid is the store**.
+
+**Live:** [eccormerce-alpha.vercel.app](https://eccormerce-alpha.vercel.app/) · **Repo:** [IsoDevMate/eccormerce](https://github.com/IsoDevMate/eccormerce)
 
 **Dev:** `npm run dev` → [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Where we are (2026-09-09)
+## Information architecture (Blaize / Yeezy small-store rule)
 
-### Done — UI / experience
+| Route | Job |
+|-------|-----|
+| `/` | **Product grid** — All / Women / Men tabs, zero splash before clothes |
+| `/shop` | Redirects to `/` (config + page) |
+| `/shop/women` · `/shop/men` | Gendered PLPs (ads/email land here) |
+| `/shop/new` | New arrivals |
+| `/shop/archive` | Full / line-filtered archive |
+| `/product/[slug]` | PDP |
+| `/thank-you` | Order confirmation |
+| `/privacy` · `/terms` | Legal |
+| `/robots.txt` · `/sitemap.xml` | SEO |
 
-| Area | Status |
-|------|--------|
-| Gender split entry (`/`) | Live — Women / Men, skip to full archive |
-| PLP (`/shop`, `/shop/women`, `/shop/men`) | Live — 2/4 density, Worn/Studio toggle, subcategory rail, popular filters, color refine, editorial card in grid |
-| PDP (`/product/[slug]`) | Live — color-matched ATC, solid size buttons, size guide + fit predictor, shipping estimator, sticky mobile bar |
-| Bag drawer + checkout shell | Live — gift wrap, no express wallets on PDP |
-| Delayed email capture (~8s) | Live — UI only; does not write to DB yet |
-| Search (⌘K / header) | Live — client search over catalog |
-| Design system | Paper/ink tokens, Instrument Serif + Geist, square corners |
-| Catalog | 26 typed products in `src/data/catalog.ts` (Unsplash stand-ins) |
+Nav: **New → Shop → Women → Men**.
 
-### Scaffolded — not wired
-
-| Area | Status |
-|------|--------|
-| Turso / libSQL + Drizzle | Schema + client exist (`src/lib/db/*`). Catalog still in-memory TS. Newsletter action validates email but does not persist. |
-| Auth / orders / payments | Not started |
-| Real photography / CMS | Not started |
-| Admin / merchandising | Not started |
-
-### Explicitly out of scope so far
-
-- Copying Skims/Yeezy/Stüssy layouts pixel-for-pixel
-- Postgres (we use SQLite/Turso by design)
-- Backend-first features before the shopping UI feels right
+Principles (not brand clones): [`docs/BLAIZE_PRINCIPLES.md`](docs/BLAIZE_PRINCIPLES.md)
 
 ---
 
-## Architecture (current)
+## Visual QA (required)
 
-```
-src/
-  app/                  # App Router pages + server actions
-  components/
-    plp/                # Product listing
-    pdp/                # Product detail
-    cart/               # Drawer
-    site/               # Header, footer, search, email overlay
-  data/catalog.ts       # Source of truth for products (for now)
-  lib/
-    cart-store.tsx      # Client cart (localStorage)
-    catalog.ts          # Queries over catalog
-    db/                 # Drizzle + Turso stub
-    format.ts, cn.ts, env.ts
-  types/product.ts
-```
-
-**Patterns borrowed from the Shamiri architecture notes:** App Router, server actions, Zod at boundaries, `lib/` singleton client, feature folders. Domain is commerce, not education.
-
-**Philosophy brief (compressed):** brand world + conversion confidence. PLP/PDP as first landings. Model + studio imagery. Size/shipping on the purchase surface. Filters above the fold when the catalog needs them. Homepage (here: gender split) as a map, not a brochure.
-
----
-
-## Test suites
-
-**There are none yet.**
-
-- No `*.test.ts` / `*.spec.ts`
-- No Vitest, Jest, Playwright, or Testing Library in `package.json`
-- Scripts today: `dev`, `build`, `start`, `lint` only
-- Verification so far: TypeScript (`tsc --noEmit`), manual route HTTP checks, headless screenshots
-
-### What tests would unlock next
-
-| Layer | Why it matters for this store |
-|-------|-------------------------------|
-| Unit — `lib/catalog`, `format`, fit predictor, filters | Protects PLP/PDP logic as the catalog grows |
-| Component — size guide, ATC color, density/Worn toggles | Locks the conversion patterns we care about |
-| E2E — split → PLP → PDP → bag → checkout | Proves the journey we optimized for |
-| Contract — newsletter / future Turso writes | Safe to wire persistence without guessing |
-
-Recommended stack when we add them: **Vitest** (unit) + **Playwright** (e2e), aligned with how DigitalHub was tested.
-
----
-
-## How to run
+Do **not** ship UI changes from code-only review. Capture and look at screenshots:
 
 ```bash
-npm install
-npm run dev
+npm run visual:smoke
 ```
 
-Optional env (see `.env.example`):
-
-```
-TURSO_DATABASE_URL=file:./.data/sable.db
-TURSO_AUTH_TOKEN=
-```
+Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md). Artifacts go to `.local/visual/` (gitignored).
 
 ---
 
-## Sensible next steps (when you resume)
+## Ship-ready checklist
 
-1. Add Vitest + a few catalog/filter unit tests, then Playwright for the happy path.
-2. Persist newsletter + catalog via Turso.
-3. Replace Unsplash with real product media.
-4. Harden checkout (still a local shell).
+- Custom 404, per-route titles + descriptions, OG image, favicon icon
+- robots.txt + sitemap.xml
+- Cookie banner + consent-gated Vercel Analytics
+- Privacy + Terms with real London address (18 Great Portland Street, W1W 8QP)
+- Thank-you page (checkout validates; no `alert`)
+- Loading states, form error states
+- Sticky mobile ATC on PDP
+- Featured PLP video on index-0 products (`public/media/`)
+- Badge discipline: 1 Best Seller, 1 New, 1 Limited
+- Unique Unsplash IDs per image slot (q=70 + Next Image AVIF/WebP)
 
-Stop here until you pick the next slice.
+Still stand-in photography — a real shoot replaces Unsplash before a serious launch.
+
+---
+
+## Stack
+
+- Catalog: `src/data/catalog.ts`
+- Cart: `src/lib/cart-store.tsx` (localStorage)
+- DB stub: `src/lib/db/` (Turso not wired)
+
+Env: see `.env.example` (`NEXT_PUBLIC_SITE_URL`, Turso).

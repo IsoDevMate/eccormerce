@@ -1,7 +1,7 @@
 import type { Measurement, Product } from "@/types/product";
 
 const u = (id: string, w = 1400) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 
 const sizes = (...inStock: Array<[string, boolean]>) =>
   inStock.map(([size, available]) => ({ size, inStock: available }));
@@ -61,7 +61,6 @@ export const products: Product[] = [
     gender: "women",
     category: "dresses",
     price: 8800,
-    badge: "Best Seller",
     description:
       "A bias-cut slip that reads as one piece of fabric. No hardware, no print — just drape you can see on a body.",
     highlights: [
@@ -69,6 +68,35 @@ export const products: Product[] = [
       "Adjustable 3mm straps",
       "Lined bust, unlined skirt",
       "Floor length on 175cm",
+    ],
+    chips: ["Bias satin", "Adjustable straps", "Floor length", "Lined bust"],
+    howTo: [
+      {
+        title: "On the body",
+        body: "The bias wants a smooth layer underneath or skin. Amira wears M at 175cm — if you are between, size up for less cling.",
+      },
+      {
+        title: "How to wear it",
+        body: "Alone at night. Under the wool overcoat for day. The rib tank sits clean under the neckline.",
+      },
+      {
+        title: "Steam, don’t press",
+        body: "Hang it. Steam the face. An iron will glaze the satin.",
+      },
+    ],
+    faq: [
+      {
+        q: "Is it sheer?",
+        a: "Lined at the bust, unlined in the skirt. Clay and bone read more than ink in hard light.",
+      },
+      {
+        q: "What size vs COS?",
+        a: "Open the fit predictor. A COS S usually lands on our M for this slip because of the bias.",
+      },
+      {
+        q: "Can I gift it?",
+        a: "Yes. Complimentary wrap is a checkbox in the bag. Holidays, 70% of our orders go as gifts.",
+      },
     ],
     materials: "92% viscose, 8% elastane. Satin face, matte reverse.",
     care: "Cold hand wash. Hang dry. Steam, do not iron the face.",
@@ -85,6 +113,8 @@ export const products: Product[] = [
     },
     fit: "slim",
     shippingDays: { min: 3, max: 6 },
+    // TODO(design): replace with real Sable footage before launch
+    video: "/media/featured-slip.mp4",
     variants: [
       {
         id: "slip-clay",
@@ -139,12 +169,12 @@ export const products: Product[] = [
         sizes: wSizes(["2X"]),
         images: [
           {
-            src: u("photo-1515372039744-b8f02a3ae446"),
+            src: u("photo-1496747611176-843222e1e57c"),
             alt: "Bone slip on Amira",
             kind: "model",
           },
           {
-            src: u("photo-1496747611176-843222e1e57c"),
+            src: u("photo-1524502397800-2eeaad7c3fe5"),
             alt: "Bone slip laid flat",
             kind: "studio",
           },
@@ -163,7 +193,6 @@ export const products: Product[] = [
     gender: "women",
     category: "lounge",
     price: 4200,
-    badge: "New",
     description:
       "A dense rib that holds at the shoulder and disappears at the waist. Built to sit under the slip or alone.",
     highlights: ["Fine-gauge rib", "Square neck", "Cropped at true waist"],
@@ -181,12 +210,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1524502397800-2eeaad7c3fe5"),
+            src: u("photo-1521577352947-9bb5873b8bb0"),
             alt: "Rib tank in ink on model",
             kind: "model",
           },
           {
-            src: u("photo-1521577352947-9bb5873b8bb0"),
+            src: u("photo-1469334031218-e382a71b716b"),
             alt: "Rib tank studio",
             kind: "studio",
           },
@@ -199,12 +228,12 @@ export const products: Product[] = [
         sizes: wSizes(["XL"]),
         images: [
           {
-            src: u("photo-1469334031218-e382a71b716b"),
+            src: u("photo-1434389677669-e08b4cac3105"),
             alt: "Clay rib tank, worn",
             kind: "model",
           },
           {
-            src: u("photo-1434389677669-e08b4cac3105"),
+            src: u("photo-1523381210434-271e8be1f52b"),
             alt: "Clay tank folded",
             kind: "studio",
           },
@@ -240,12 +269,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1524504388940-b1c1722653e1"),
+            src: u("photo-1517841905240-472988babdf9"),
             alt: "Heavy crew tee in bone",
             kind: "model",
           },
           {
-            src: u("photo-1523381210434-271e8be1f52b"),
+            src: u("photo-1618354691373-d851c5c3a990"),
             alt: "Folded bone tees",
             kind: "studio",
           },
@@ -258,12 +287,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1517841905240-472988babdf9"),
+            src: u("photo-1578932750294-f5075d6b5f65"),
             alt: "Ink heavy tee on Jun",
             kind: "model",
           },
           {
-            src: u("photo-1618354691373-d851c5c3a990"),
+            src: u("photo-1487412720507-e7ab37603c6f"),
             alt: "Ink tee, flat",
             kind: "studio",
           },
@@ -282,7 +311,6 @@ export const products: Product[] = [
     gender: "women",
     category: "knit",
     price: 16800,
-    badge: "New",
     description:
       "A fine merino cardigan with a hidden placket. Meant to be the layer you forget is there.",
     highlights: ["18.5 micron merino", "Mother-of-pearl buttons", "Hip length"],
@@ -300,12 +328,12 @@ export const products: Product[] = [
         sizes: wSizes(["XXS"]),
         images: [
           {
-            src: u("photo-1434389677669-e08b4cac3105"),
+            src: u("photo-1620799140408-edc6dcb6d633"),
             alt: "Merino cardigan in sand",
             kind: "model",
           },
           {
-            src: u("photo-1578932750294-f5075d6b5f65"),
+            src: u("photo-1591047139829-d91aecb6caea"),
             alt: "Cardigan studio",
             kind: "studio",
           },
@@ -318,12 +346,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1487412720507-e7ab37603c6f"),
+            src: u("photo-1551488831-00ddcb6c6bd3"),
             alt: "Ink cardigan worn open",
             kind: "model",
           },
           {
-            src: u("photo-1620799140408-edc6dcb6d633"),
+            src: u("photo-1506629082955-511b1aa78284"),
             alt: "Ink knit, folded",
             kind: "studio",
           },
@@ -342,7 +370,6 @@ export const products: Product[] = [
     gender: "women",
     category: "outerwear",
     price: 42000,
-    badge: "Limited",
     description:
       "A single-breasted overcoat in boiled wool. Weight without bulk. The collar sits away from the neck on purpose.",
     highlights: [
@@ -369,12 +396,12 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", false]),
         images: [
           {
-            src: u("photo-1539109136881-3be0616ffa6c"),
+            src: u("photo-1542272604-787c59578f2e"),
             alt: "Wool overcoat in camel, walking",
             kind: "model",
           },
           {
-            src: u("photo-1591047139829-d91aecb6caea"),
+            src: u("photo-1501196354221-8d93340c4178"),
             alt: "Overcoat on hanger",
             kind: "studio",
           },
@@ -387,12 +414,12 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", true]),
         images: [
           {
-            src: u("photo-1490481651871-ab68de25d43d"),
+            src: u("photo-1541099645347-66d1766432c1"),
             alt: "Ink overcoat on Amira",
             kind: "model",
           },
           {
-            src: u("photo-1551488831-00ddcb6c6bd3"),
+            src: u("photo-1509631179647-0177331693ae"),
             alt: "Ink coat, studio",
             kind: "studio",
           },
@@ -428,12 +455,12 @@ export const products: Product[] = [
         sizes: wSizes(["1X"]),
         images: [
           {
-            src: u("photo-1506629082955-511b1aa78284"),
+            src: u("photo-1556828112-4bba69c8e5b0"),
             alt: "Tailored trouser in sand",
             kind: "model",
           },
           {
-            src: u("photo-1542272604-787c59578f2e"),
+            src: u("photo-1617137984095-73e40dfe8b10"),
             alt: "Trouser studio",
             kind: "studio",
           },
@@ -446,12 +473,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1501196354221-8d93340c4178"),
+            src: u("photo-1506794778202-cad84cf45f1d"),
             alt: "Ink tailored trouser",
             kind: "model",
           },
           {
-            src: u("photo-1541099645347-66d1766432c1"),
+            src: u("photo-1487222477890-753e22f77c25"),
             alt: "Ink trouser flat",
             kind: "studio",
           },
@@ -491,12 +518,12 @@ export const products: Product[] = [
         sizes: sizes(["S", true], ["M", true], ["L", true], ["XL", true]),
         images: [
           {
-            src: u("photo-1509631179647-0177331693ae"),
+            src: u("photo-1583743814966-893c1b508804"),
             alt: "Lounge short in ink",
             kind: "model",
           },
           {
-            src: u("photo-1556828112-4bba69c8e5b0"),
+            src: u("photo-1552374196-1ab2a1c593e8"),
             alt: "Shorts studio",
             kind: "studio",
           },
@@ -532,12 +559,12 @@ export const products: Product[] = [
         sizes: wSizes(["XXS", "2X"]),
         images: [
           {
-            src: u("photo-1620799140408-edc6dcb6d633"),
+            src: u("photo-1562157873-818bc0726f68"),
             alt: "Heavy hoodie in bone",
             kind: "model",
           },
           {
-            src: u("photo-1556828112-4bba69c8e5b0"),
+            src: u("photo-1507003211169-0a1dd7228f2d"),
             alt: "Hoodie flat",
             kind: "studio",
           },
@@ -550,12 +577,12 @@ export const products: Product[] = [
         sizes: wSizes(),
         images: [
           {
-            src: u("photo-1517841905240-472988babdf9"),
+            src: u("photo-1539571696357-5a69c17a67c6"),
             alt: "Ink hoodie worn",
             kind: "model",
           },
           {
-            src: u("photo-1556828112-4bba69c8e5b0"),
+            src: u("photo-1617137968427-85924c800a22"),
             alt: "Ink hoodie studio",
             kind: "studio",
           },
@@ -590,6 +617,8 @@ export const products: Product[] = [
     },
     fit: "relaxed",
     shippingDays: { min: 2, max: 5 },
+    // TODO(design): replace with real Sable footage before launch
+    video: "/media/featured-crew.mp4",
     variants: [
       {
         id: "tsm-ink",
@@ -598,17 +627,17 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1617137984095-73e40dfe8b10"),
+            src: u("photo-1500648767791-00dcc994a43e"),
             alt: "Archive crew in ink on Antoine",
             kind: "model",
           },
           {
-            src: u("photo-1618354691373-d851c5c3a990"),
+            src: u("photo-1521369909029-2afed882baee"),
             alt: "Ink crew, flat lay",
             kind: "studio",
           },
           {
-            src: u("photo-1523381210434-271e8be1f52b"),
+            src: u("photo-1588850561407-739547b4be9c"),
             alt: "Crew collar detail",
             kind: "detail",
           },
@@ -621,12 +650,12 @@ export const products: Product[] = [
         sizes: mSizes(["XXL"]),
         images: [
           {
-            src: u("photo-1506794778202-cad84cf45f1d"),
+            src: u("photo-1553062407-98eeb64c6a62"),
             alt: "Bone archive crew",
             kind: "model",
           },
           {
-            src: u("photo-1523381210434-271e8be1f52b"),
+            src: u("photo-1624222247344-550fb60583c2"),
             alt: "Bone tee stack",
             kind: "studio",
           },
@@ -645,7 +674,6 @@ export const products: Product[] = [
     gender: "men",
     category: "tops",
     price: 7200,
-    badge: "New",
     description:
       "A long sleeve with a slightly longer cuff. The same 220gsm as the crew, different block.",
     highlights: ["Set-in sleeve", "Rib cuff", "Straight hem"],
@@ -663,12 +691,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1487222477890-753e22f77c25"),
+            src: u("photo-1483985988355-763728e1935b"),
             alt: "LS-03 in ink",
             kind: "model",
           },
           {
-            src: u("photo-1583743814966-893c1b508804"),
+            src: u("photo-1485968579580-733a9f9f2a55"),
             alt: "LS-03 studio",
             kind: "studio",
           },
@@ -681,12 +709,12 @@ export const products: Product[] = [
         sizes: mSizes(["S"]),
         images: [
           {
-            src: u("photo-1552374196-1ab2a1c593e8"),
+            src: u("photo-1550614000-4895a10e1bfd"),
             alt: "LS-03 in ash",
             kind: "model",
           },
           {
-            src: u("photo-1562157873-818bc0726f68"),
+            src: u("photo-1544441893-675973e31985"),
             alt: "Ash long sleeve flat",
             kind: "studio",
           },
@@ -721,12 +749,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1552374196-1ab2a1c593e8"),
+            src: u("photo-1558171813-4c088753af8f"),
             alt: "Studio hoodie in ink",
             kind: "model",
           },
           {
-            src: u("photo-1556828112-4bba69c8e5b0"),
+            src: u("photo-1576566588028-4147f3842f27"),
             alt: "Hoodie studio still",
             kind: "studio",
           },
@@ -739,12 +767,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1507003211169-0a1dd7228f2d"),
+            src: u("photo-1594938298603-c8148c4dae35"),
             alt: "Ash studio hoodie",
             kind: "model",
           },
           {
-            src: u("photo-1620799140408-edc6dcb6d633"),
+            src: u("photo-1618354691438-25bc045586c7"),
             alt: "Ash hoodie flat",
             kind: "studio",
           },
@@ -780,12 +808,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1539571696357-5a69c17a67c6"),
+            src: u("photo-1602810318383-e386cc2a3ccf"),
             alt: "Heavy sweatpant in ink",
             kind: "model",
           },
           {
-            src: u("photo-1542272604-787c59578f2e"),
+            src: u("photo-1594633312681-425c7b97ccd1"),
             alt: "Sweatpant studio",
             kind: "studio",
           },
@@ -804,7 +832,6 @@ export const products: Product[] = [
     gender: "men",
     category: "outerwear",
     price: 24800,
-    badge: "Limited",
     description:
       "A shirt-jacket in boiled wool. Two chest pockets. Worn open over the crew.",
     highlights: ["Boiled wool", "Corozo buttons", "Unlined"],
@@ -822,12 +849,12 @@ export const products: Product[] = [
         sizes: mSizes(["XXL"]),
         images: [
           {
-            src: u("photo-1617137968427-85924c800a22"),
+            src: u("photo-1585487000160-6ebcfceb0d03"),
             alt: "Wool overshirt in camel",
             kind: "model",
           },
           {
-            src: u("photo-1591047139829-d91aecb6caea"),
+            src: u("photo-1571945153237-4929e783af4a"),
             alt: "Overshirt studio",
             kind: "studio",
           },
@@ -840,12 +867,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1487222477890-753e22f77c25"),
+            src: u("photo-1564584217132-2271feaeb3c5"),
             alt: "Ink overshirt",
             kind: "model",
           },
           {
-            src: u("photo-1551488831-00ddcb6c6bd3"),
+            src: u("photo-1525507119028-ed4c629a60a3"),
             alt: "Ink overshirt flat",
             kind: "studio",
           },
@@ -880,12 +907,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1500648767791-00dcc994a43e"),
+            src: u("photo-1445205170230-053b83016050"),
             alt: "Pleated trouser in sand",
             kind: "model",
           },
           {
-            src: u("photo-1541099645347-66d1766432c1"),
+            src: u("photo-1489980557514-251d61e3eeb6"),
             alt: "Trouser studio",
             kind: "studio",
           },
@@ -921,12 +948,12 @@ export const products: Product[] = [
         sizes: mSizes(),
         images: [
           {
-            src: u("photo-1617137968427-85924c800a22"),
+            src: u("photo-1512436991641-6745cdb1723f"),
             alt: "Merino crew in ink",
             kind: "model",
           },
           {
-            src: u("photo-1434389677669-e08b4cac3105"),
+            src: u("photo-1520975954732-35dd22299614"),
             alt: "Merino crew studio",
             kind: "studio",
           },
@@ -939,12 +966,12 @@ export const products: Product[] = [
         sizes: mSizes(["S"]),
         images: [
           {
-            src: u("photo-1507003211169-0a1dd7228f2d"),
+            src: u("photo-1549062572-544a64fb0c56"),
             alt: "Sand merino crew",
             kind: "model",
           },
           {
-            src: u("photo-1578932750294-f5075d6b5f65"),
+            src: u("photo-1551028719-00167b16eac5"),
             alt: "Sand knit flat",
             kind: "studio",
           },
@@ -979,12 +1006,12 @@ export const products: Product[] = [
         sizes: sizes(["ONE", true]),
         images: [
           {
-            src: u("photo-1521369909029-2afed882baee"),
+            src: u("photo-1475180098004-ca77a66827be"),
             alt: "Studio cap in ink",
             kind: "model",
           },
           {
-            src: u("photo-1588850561407-739547b4be9c"),
+            src: u("photo-1520975661595-6453be9abf95"),
             alt: "Cap studio",
             kind: "studio",
           },
@@ -1029,12 +1056,12 @@ export const products: Product[] = [
         ),
         images: [
           {
-            src: u("photo-1553062407-98eeb64c6a62"),
+            src: u("photo-1552374196-c4e7ffc6e126"),
             alt: "Leather belt in dark oak",
             kind: "studio",
           },
           {
-            src: u("photo-1624222247344-550fb60583c2"),
+            src: u("photo-1603252109612-24fa03d33425"),
             alt: "Belt worn",
             kind: "model",
           },
@@ -1072,12 +1099,12 @@ export const products: Product[] = [
         sizes: sizes(["S", false], ["M", false], ["L", false], ["XL", false]),
         images: [
           {
-            src: u("photo-1591047139829-d91aecb6caea"),
+            src: u("photo-1562157873-818bc0726f69"),
             alt: "Field jacket preview",
             kind: "studio",
           },
           {
-            src: u("photo-1552374196-1ab2a1c593e8"),
+            src: u("photo-1509631179647-0177331693af"),
             alt: "Field jacket on body, lookbook",
             kind: "model",
           },

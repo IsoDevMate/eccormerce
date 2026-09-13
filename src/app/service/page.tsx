@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { subscribeEmailForm } from "@/app/actions/newsletter";
 
-export const metadata = { title: "Service" };
+export const metadata: Metadata = {
+  title: "Service",
+  description:
+    "Contact Sable customer service for fit, shipping, and gifts. 18 Great Portland Street, London.",
+};
 
 export default function ServicePage() {
   return (
@@ -11,11 +16,22 @@ export default function ServicePage() {
         Fit questions, ship dates, gifts. Write us. If you would rather wait for
         the field jacket, leave an email — that drop is teased, not sold.
       </p>
-      <p className="mt-8 text-lg">
-        <a className="underline" href="mailto:service@sable.studio">
-          service@sable.studio
-        </a>
-      </p>
+      <div className="mt-8 space-y-2 text-sm">
+        <p>
+          <a className="underline" href="mailto:service@sable.studio">
+            service@sable.studio
+          </a>
+        </p>
+        <address className="not-italic text-muted">
+          Sable Studio Ltd
+          <br />
+          18 Great Portland Street
+          <br />
+          London W1W 8QP
+          <br />
+          United Kingdom
+        </address>
+      </div>
       <form action={subscribeEmailForm} className="mt-12 max-w-md" id="notes">
         <label className="micro" htmlFor="drop-email">
           Field jacket drop

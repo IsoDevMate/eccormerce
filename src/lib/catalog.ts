@@ -1,6 +1,16 @@
 import { products } from "@/data/catalog";
 import type { Category, Gender, Product } from "@/types/product";
 
+export const PRODUCT_LINES = [
+  "Soft Lounge",
+  "Studio",
+  "Knit",
+  "Outer",
+  "Archive",
+] as const;
+
+export type ProductLine = (typeof PRODUCT_LINES)[number];
+
 export function getAllProducts() {
   return products;
 }
@@ -53,5 +63,44 @@ export function searchProducts(query: string) {
       .join(" ")
       .toLowerCase()
       .includes(q),
+  );
+}
+
+export function getNewArrivals() {
+  return [...products]
+    .filter((product) => product.badge === "New" || product.comingSoon)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function getProductsByLine(line: string) {
+  return products.filter((product) => product.line === line);
+}
+
+export function getLineCover(line: string) {
+  const match = products.find((product) => product.line === line);
+  const image =
+    match?.variants[0]?.images.find((item) => item.kind === "model") ??
+    match?.variants[0]?.images[0];
+  return {
+    line,
+    href: `/shop/archive?line=${encodeURIComponent(line)}`,
+    image: image?.src ?? "",
+    count: getProductsByLine(line).length,
+  };
+}
+
+export function getUgcLooks() {
+  return products.flatMap((product) =>
+    product.variants.flatMap((variant) =>
+      variant.images
+        .filter((image) => image.kind === "ugc" || image.kind === "model")
+        .slice(0, 1)
+        .map((image) => ({
+          src: image.src,
+          alt: image.alt,
+          href: `/product/${product.slug}`,
+          name: product.name,
+        })),
+    ),
   );
 }

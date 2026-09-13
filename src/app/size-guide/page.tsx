@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { brandComparisons } from "@/data/catalog";
 
-export const metadata = { title: "Size & fit" };
+export const metadata: Metadata = {
+  title: "Size & fit",
+  description:
+    "Sable size guide — measure how-to, inches and centimetres, and fit predictors vs COS, Acne, Levi’s, Everlane.",
+};
 
 export default function SizeGuidePage() {
   return (
@@ -9,9 +14,9 @@ export default function SizeGuidePage() {
       <p className="micro text-muted">House fit</p>
       <h1 className="display mt-3 text-6xl">Measure once. Buy once.</h1>
       <p className="mt-6 text-sm text-muted">
-        Every product page has a live chart, inches and centimetres, and a
-        predictor against COS, Acne Studios, Levi’s, and Everlane. You can add
-        to bag from the chart.
+        Every product page has a live chart, inches and centimetres, a measure
+        diagram, and a predictor against other brands. You can add to bag from
+        the chart.
       </p>
       <ul className="mt-8 space-y-3 text-sm">
         {brandComparisons.map((item) => (
@@ -25,8 +30,8 @@ export default function SizeGuidePage() {
           </li>
         ))}
       </ul>
-      <Link href="/shop" className="micro mt-10 inline-block underline">
-        Back to the archive
+      <Link href="/" className="micro mt-10 inline-block underline">
+        Back to the shop
       </Link>
     </div>
   );

@@ -62,7 +62,7 @@ export function SearchDialog() {
                   {image ? (
                     <Image
                       src={image.src}
-                      alt=""
+                      alt={product.name}
                       width={56}
                       height={70}
                       className="h-16 w-12 object-cover"

@@ -40,6 +40,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local visual QA artifacts (screenshots, video frames — not for git)
+.local/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

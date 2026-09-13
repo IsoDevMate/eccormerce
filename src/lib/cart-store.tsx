@@ -9,6 +9,9 @@ import {
   type ReactNode,
 } from "react";
 
+export const PROTECTION_PRICE = 800;
+export const PROTECTION_KEY = "package-protection";
+
 export type CartLine = {
   key: string;
   productId: string;
@@ -22,6 +25,7 @@ export type CartLine = {
   price: number;
   quantity: number;
   giftWrap?: boolean;
+  kind?: "product" | "protection";
 };
 
 type CartContextValue = {
@@ -33,6 +37,8 @@ type CartContextValue = {
   removeLine: (key: string) => void;
   setQuantity: (key: string, quantity: number) => void;
   setGiftWrap: (key: string, giftWrap: boolean) => void;
+  protection: boolean;
+  setProtection: (on: boolean) => void;
   count: number;
   subtotal: number;
 };
@@ -95,13 +101,39 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 line.key === key ? { ...line, quantity } : line,
               ),
         ),
-      setGiftWrap: (key, giftWrap) =>
-        setLines((current) =>
-          current.map((line) =>
-            line.key === key ? { ...line, giftWrap } : line,
+        setGiftWrap: (key, giftWrap) =>
+          setLines((current) =>
+            current.map((line) =>
+              line.key === key ? { ...line, giftWrap } : line,
+            ),
           ),
-        ),
-      count: lines.reduce((sum, line) => sum + line.quantity, 0),
+      protection: lines.some((line) => line.kind === "protection"),
+      setProtection: (on) => {
+        setLines((current) => {
+          const without = current.filter((line) => line.kind !== "protection");
+          if (!on) return without;
+          return [
+            ...without,
+            {
+              key: PROTECTION_KEY,
+              productId: "protection",
+              slug: "shipping",
+              name: "Package protection",
+              line: "Service",
+              image: "",
+              color: "—",
+              colorHex: "#141414",
+              size: "—",
+              price: PROTECTION_PRICE,
+              quantity: 1,
+              kind: "protection",
+            },
+          ];
+        });
+      },
+      count: lines
+        .filter((line) => line.kind !== "protection")
+        .reduce((sum, line) => sum + line.quantity, 0),
       subtotal: lines.reduce((sum, line) => sum + line.price * line.quantity, 0),
     };
   }, [lines, isOpen]);

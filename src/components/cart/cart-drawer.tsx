@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "@/lib/cart-store";
+import { useCart, PROTECTION_PRICE } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 
 export function CartDrawer() {
@@ -14,14 +14,22 @@ export function CartDrawer() {
     setQuantity,
     removeLine,
     setGiftWrap,
+    protection,
+    setProtection,
   } = useCart();
 
   if (!isOpen) return null;
 
-  const gift = 1200;
-  const wrapCount = lines.filter((line) => line.giftWrap).length;
-  const shipping = subtotal >= 15000 ? 0 : 1200;
-  const total = subtotal + wrapCount * gift + shipping;
+  const products = lines.filter((line) => line.kind !== "protection");
+  const gift = 0;
+  const wrapCount = products.filter((line) => line.giftWrap).length;
+  const merchandise = products.reduce(
+    (sum, line) => sum + line.price * line.quantity,
+    0,
+  );
+  const shipping = merchandise >= 15000 ? 0 : 1200;
+  const protectionCost = protection ? PROTECTION_PRICE : 0;
+  const total = merchandise + wrapCount * gift + shipping + protectionCost;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-ink/40">
@@ -39,23 +47,25 @@ export function CartDrawer() {
           </button>
         </div>
         <ul className="flex-1 overflow-y-auto">
-          {lines.length === 0 ? (
+          {products.length === 0 ? (
             <li className="px-5 py-12 text-sm text-muted">
               Empty. The archive is twenty-six pieces — start with a crew.
             </li>
           ) : (
-            lines.map((line) => (
+            products.map((line) => (
               <li
                 key={line.key}
                 className="flex gap-4 border-b border-line px-5 py-4"
               >
-                <Image
-                  src={line.image}
-                  alt=""
-                  width={80}
-                  height={100}
-                  className="h-[100px] w-20 object-cover"
-                />
+                {line.image ? (
+                  <Image
+                    src={line.image}
+                    alt={line.name}
+                    width={80}
+                    height={100}
+                    className="h-[100px] w-20 object-cover"
+                  />
+                ) : null}
                 <div className="flex-1">
                   <p className="micro text-muted">{line.line}</p>
                   <p>{line.name}</p>
@@ -103,14 +113,37 @@ export function CartDrawer() {
           )}
         </ul>
         <div className="border-t border-ink px-5 py-5">
-          <p className="flex justify-between text-sm">
+          <label className="flex items-start gap-3 border border-line p-3 text-sm">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={protection}
+              onChange={(event) => setProtection(event.target.checked)}
+            />
+            <span>
+              <span className="block font-medium">
+                Package protection · {formatPrice(PROTECTION_PRICE)}
+              </span>
+              <span className="mt-1 block text-xs text-muted">
+                Covers loss and damage in transit. Off by default — you have to
+                opt in. Decline anytime.
+              </span>
+            </span>
+          </label>
+          <p className="mt-4 flex justify-between text-sm">
             <span>Subtotal</span>
-            <span>{formatPrice(subtotal)}</span>
+            <span>{formatPrice(merchandise)}</span>
           </p>
           <p className="mt-1 flex justify-between text-sm text-muted">
             <span>Shipping</span>
             <span>{shipping === 0 ? "Complimentary" : formatPrice(shipping)}</span>
           </p>
+          {protection ? (
+            <p className="mt-1 flex justify-between text-sm text-muted">
+              <span>Protection</span>
+              <span>{formatPrice(PROTECTION_PRICE)}</span>
+            </p>
+          ) : null}
           <p className="mt-3 flex justify-between font-medium">
             <span>Total</span>
             <span>{formatPrice(total)}</span>

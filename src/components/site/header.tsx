@@ -6,34 +6,35 @@ import { useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/cn";
 
 const nav = [
+  { href: "/shop/new", label: "New" },
+  { href: "/", label: "Shop" },
   { href: "/shop/women", label: "Women" },
   { href: "/shop/men", label: "Men" },
-  { href: "/shop", label: "Archive" },
 ];
+
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Header() {
   const pathname = usePathname();
   const { count, openCart } = useCart();
-  const split = pathname === "/";
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-30 border-b",
-        split
-          ? "border-transparent bg-transparent mix-blend-difference text-paper"
-          : "border-line bg-paper/90 backdrop-blur-sm",
-      )}
-    >
-      <div className="grid grid-cols-3 items-center px-4 py-3 md:px-6">
-        <nav className="flex items-center gap-4 md:gap-6" aria-label="Primary">
+    <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur-sm">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3 md:px-6">
+        <nav
+          className="flex items-center gap-3 overflow-x-auto md:gap-5"
+          aria-label="Primary"
+        >
           {nav.map((item) => (
             <Link
-              key={item.href}
+              key={item.href + item.label}
               href={item.href}
               className={cn(
-                "micro text-[10px] tracking-[0.2em] focus-ring",
-                pathname.startsWith(item.href) && !split ? "underline" : "",
+                "micro shrink-0 text-[10px] tracking-[0.2em] focus-ring",
+                isActive(pathname, item.href) ? "underline" : "",
               )}
             >
               {item.label}
@@ -46,13 +47,11 @@ export function Header() {
         >
           SABLE
         </Link>
-        <div className="flex items-center justify-end gap-4 md:gap-6">
+        <div className="flex items-center justify-end gap-3 md:gap-6">
           <button
             type="button"
             className="micro text-[10px] tracking-[0.2em] focus-ring"
-            onClick={() =>
-              window.dispatchEvent(new Event("sable:search"))
-            }
+            onClick={() => window.dispatchEvent(new Event("sable:search"))}
           >
             Search
           </button>

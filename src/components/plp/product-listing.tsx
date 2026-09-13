@@ -3,18 +3,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { Category, Product } from "@/types/product";
+import type { Category, Gender, Product } from "@/types/product";
 import { categories, popularFilters, type PopularFilter } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useCart } from "@/lib/cart-store";
 
 type Setting = "worn" | "studio";
 type Density = 1 | 2 | 4;
 type SortKey = "featured" | "newest" | "price-asc" | "price-desc";
+type GenderTab = Gender | "all";
 
 type Props = {
   products: Product[];
   genderLabel: string;
+  heading?: string;
+  showGenderTabs?: boolean;
+  initialGender?: GenderTab;
   editorial: {
     kicker: string;
     title: string;
@@ -24,11 +29,19 @@ type Props = {
   };
 };
 
-export function ProductListing({ products, genderLabel, editorial }: Props) {
+export function ProductListing({
+  products,
+  genderLabel,
+  heading = "Shop",
+  showGenderTabs = false,
+  initialGender = "all",
+  editorial,
+}: Props) {
   const [setting, setSetting] = useState<Setting>("worn");
   const [density, setDensity] = useState<Density>(4);
   const [sort, setSort] = useState<SortKey>("featured");
   const [category, setCategory] = useState<Category | "all">("all");
+  const [gender, setGender] = useState<GenderTab>(initialGender);
   const [popular, setPopular] = useState<PopularFilter | null>(null);
   const [color, setColor] = useState<string | null>(null);
 
@@ -44,6 +57,11 @@ export function ProductListing({ products, genderLabel, editorial }: Props) {
 
   const visible = useMemo(() => {
     let list = [...products];
+    if (gender !== "all") {
+      list = list.filter(
+        (product) => product.gender === gender || product.gender === "unisex",
+      );
+    }
     if (category !== "all") {
       list = list.filter((product) => product.category === category);
     }
@@ -74,7 +92,7 @@ export function ProductListing({ products, genderLabel, editorial }: Props) {
     if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [products, category, color, popular, sort]);
+  }, [products, gender, category, color, popular, sort]);
 
   const rail = categories.filter((item) =>
     products.some((product) => product.category === item.id),
@@ -84,15 +102,47 @@ export function ProductListing({ products, genderLabel, editorial }: Props) {
 
   return (
     <div>
-      <section className="border-b border-line px-4 py-6 md:px-6">
-        <p className="micro text-muted">{genderLabel}</p>
-        <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-          <h1 className="display text-5xl md:text-7xl">The archive</h1>
-          <p className="max-w-sm text-sm text-muted">
-            {visible.length} pieces. Model shots first. Studio on toggle. Filters
-            sit with the clothes — not in a drawer.
+      <section className="border-b border-line px-4 py-5 md:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="micro text-muted">{genderLabel}</p>
+            <h1 className="display mt-2 text-4xl md:text-6xl">{heading}</h1>
+          </div>
+          <p className="max-w-xs text-sm text-muted">
+            {visible.length} pieces in view.
           </p>
         </div>
+        {showGenderTabs ? (
+          <div
+            className="mt-5 flex gap-2"
+            role="tablist"
+            aria-label="Shop by who wears it"
+          >
+            {(
+              [
+                ["all", "All"],
+                ["women", "Women"],
+                ["men", "Men"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                role="tab"
+                aria-selected={gender === value}
+                onClick={() => setGender(value)}
+                className={cn(
+                  "micro border px-4 py-2",
+                  gender === value
+                    ? "border-ink bg-ink text-paper"
+                    : "border-line",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       <div className="border-b border-line">
@@ -125,7 +175,7 @@ export function ProductListing({ products, genderLabel, editorial }: Props) {
                 {thumb ? (
                   <Image
                     src={thumb.src}
-                    alt=""
+                    alt={item.label}
                     width={36}
                     height={44}
                     className="h-11 w-9 object-cover"
@@ -285,8 +335,9 @@ export function ProductListing({ products, genderLabel, editorial }: Props) {
                   <div className="relative aspect-[4/5]">
                     <Image
                       src={editorial.image}
-                      alt=""
+                      alt={editorial.title}
                       fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
                       className="object-cover"
                     />
                   </div>
@@ -320,16 +371,42 @@ function ProductCard({
   setting: Setting;
   featured: boolean;
 }) {
+  const { addLine } = useCart();
+  const [open, setOpen] = useState(false);
   const variant = product.variants[0];
   const preferred =
     variant?.images.find((image) =>
       setting === "worn" ? image.kind === "model" : image.kind === "studio",
     ) ?? variant?.images[0];
+  const sizes = variant?.sizes ?? [];
+
+  function addSize(size: string) {
+    if (!variant || product.comingSoon) return;
+    const image =
+      variant.images.find((item) => item.kind === "model") ?? variant.images[0];
+    addLine({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      line: product.line,
+      image: image?.src ?? "",
+      color: variant.name,
+      colorHex: variant.hex,
+      size,
+      price: product.price,
+    });
+    setOpen(false);
+  }
 
   return (
-    <article className="relative border-b border-r border-line">
-      <Link href={`/product/${product.slug}`} className="group block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
+    <article className="group relative border-b border-r border-line">
+      <Link href={`/product/${product.slug}`} className="block">
+        <div
+          className={cn(
+            "relative aspect-[4/5] overflow-hidden",
+            setting === "studio" ? "bg-[#efe8dc]" : "bg-paper-2",
+          )}
+        >
           {featured && product.video ? (
             <video
               className="absolute inset-0 h-full w-full object-cover"
@@ -348,7 +425,10 @@ function ProductCard({
               alt={preferred.alt}
               fill
               sizes="(min-width: 768px) 25vw, 50vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              className={cn(
+                "object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+                setting === "studio" && "object-contain p-6",
+              )}
             />
           ) : null}
           {product.comingSoon ? (
@@ -379,6 +459,64 @@ function ProductCard({
           ))}
         </div>
       </Link>
+
+      {!product.comingSoon ? (
+        <div className="absolute right-3 top-3 z-10">
+          <button
+            type="button"
+            className="flex h-8 w-8 items-center justify-center border border-ink bg-paper text-sm md:opacity-0 md:group-hover:opacity-100"
+            aria-label={`Quick size ${product.name}`}
+            onClick={(event) => {
+              event.preventDefault();
+              setOpen((current) => !current);
+            }}
+          >
+            +
+          </button>
+          {open ? (
+            <div className="absolute right-0 top-9 z-20 w-40 border border-ink bg-paper p-2 shadow-[4px_4px_0_0_#141414]">
+              <p className="micro mb-2 text-muted">Quick size</p>
+              <div className="grid grid-cols-3 gap-1">
+                {sizes.map((item) => (
+                  <button
+                    key={item.size}
+                    type="button"
+                    disabled={!item.inStock}
+                    onClick={() => addSize(item.size)}
+                    className={cn(
+                      "h-8 border text-xs",
+                      item.inStock
+                        ? "border-ink hover:bg-ink hover:text-paper"
+                        : "cursor-not-allowed border-line text-muted line-through",
+                    )}
+                  >
+                    {item.size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="pointer-events-none absolute inset-x-3 bottom-24 hidden justify-center gap-1 md:group-hover:flex">
+              {sizes
+                .filter((item) => item.inStock)
+                .slice(0, 5)
+                .map((item) => (
+                  <button
+                    key={item.size}
+                    type="button"
+                    className="pointer-events-auto h-8 min-w-8 border border-ink bg-paper px-2 text-xs hover:bg-ink hover:text-paper"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      addSize(item.size);
+                    }}
+                  >
+                    {item.size}
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
+      ) : null}
     </article>
   );
 }

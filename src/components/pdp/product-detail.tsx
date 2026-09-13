@@ -8,6 +8,7 @@ import { useCart } from "@/lib/cart-store";
 import { cmFromInches, contrastOn, formatHeight, formatPrice } from "@/lib/format";
 import { brandComparisons, predictSableSize } from "@/data/catalog";
 import { getRelated } from "@/lib/catalog";
+import { productChips, productFaq, productHowTo, productUgc } from "@/lib/product-modules";
 import { cn } from "@/lib/cn";
 
 export function ProductDetail({ product }: { product: Product }) {
@@ -97,7 +98,13 @@ export function ProductDetail({ product }: { product: Product }) {
                   imageIndex === index && "ring-2 ring-inset ring-ink",
                 )}
               >
-                <Image src={image.src} alt="" fill className="object-cover" />
+                <Image
+                  src={image.src}
+                  alt={image.alt || `${product.name} ${index + 1}`}
+                  fill
+                  sizes="12vw"
+                  className="object-cover"
+                />
               </button>
             ))}
           </div>
@@ -108,6 +115,16 @@ export function ProductDetail({ product }: { product: Product }) {
           <h1 className="display mt-3 text-5xl md:text-6xl">{product.name}</h1>
           <p className="mt-4 text-lg">{formatPrice(product.price)}</p>
           <p className="mt-4 max-w-md text-sm text-muted">{product.description}</p>
+
+          {productChips(product).length > 0 ? (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {productChips(product).map((chip) => (
+                <span key={chip} className="micro border border-line px-2 py-1">
+                  {chip}
+                </span>
+              ))}
+            </div>
+          ) : null}
 
           <div className="mt-8">
             <p className="micro mb-3">Color — {variant?.name}</p>
@@ -226,6 +243,21 @@ export function ProductDetail({ product }: { product: Product }) {
             ))}
           </ul>
 
+          <section className="mt-8 border-t border-line pt-6">
+            <p className="micro text-muted">How to</p>
+            <ol className="mt-4 space-y-4">
+              {productHowTo(product).map((step, index) => (
+                <li key={step.title}>
+                  <p className="micro text-muted">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <p className="mt-1 font-medium">{step.title}</p>
+                  <p className="mt-1 text-sm text-muted">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
           <details className="mt-8 border-t border-line py-4">
             <summary className="micro cursor-pointer">Materials & care</summary>
             <p className="mt-3 text-sm">{product.materials}</p>
@@ -247,6 +279,18 @@ export function ProductDetail({ product }: { product: Product }) {
               Direct line to customer service
             </Link>
           </div>
+
+          <section className="border-t border-line py-6">
+            <p className="micro text-muted">FAQ for this piece</p>
+            <div className="mt-3">
+              {productFaq(product).map((item) => (
+                <details key={item.q} className="border-b border-line py-3">
+                  <summary className="cursor-pointer text-sm">{item.q}</summary>
+                  <p className="mt-2 text-sm text-muted">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
 
@@ -288,15 +332,16 @@ export function ProductDetail({ product }: { product: Product }) {
       ) : null}
 
       <section className="border-b border-line px-4 py-10 md:px-6">
-        <p className="micro text-muted">Worn, not styled</p>
+        <p className="micro text-muted">Worn, not styled · 4:5</p>
         <div className="mt-4 grid grid-cols-2 gap-px bg-line md:grid-cols-4">
-          {images
-            .filter((image) => image.kind === "ugc" || image.kind === "model")
-            .concat(images)
+          {productUgc(product)
+            .concat(
+              images.filter((image) => image.kind === "model" || image.kind === "detail"),
+            )
             .slice(0, 4)
             .map((image, index) => (
               <div key={`${image.src}-ugc-${index}`} className="relative aspect-[4/5] bg-paper">
-                <Image src={image.src} alt="" fill className="object-cover" />
+                <Image src={image.src} alt={image.alt} fill className="object-cover" />
               </div>
             ))}
         </div>
@@ -312,7 +357,13 @@ export function ProductDetail({ product }: { product: Product }) {
                 <Link key={item.id} href={`/product/${item.slug}`} className="group">
                   <div className="relative aspect-[4/5] bg-paper-2">
                     {image ? (
-                      <Image src={image.src} alt="" fill className="object-cover" />
+                      <Image
+                        src={image.src}
+                        alt={image.alt || item.name}
+                        fill
+                        sizes="(min-width: 768px) 25vw, 50vw"
+                        className="object-cover"
+                      />
                     ) : null}
                   </div>
                   <p className="mt-2 text-sm">{item.name}</p>
@@ -383,8 +434,9 @@ function SizeGuide({
         <p className="mt-3 text-sm text-muted">
           {product.model.name} is {formatHeight(product.model.heightCm)} and wears{" "}
           {product.model.size}. Chest is measured 1&quot; below the armhole; length from
-          HPS.
+          HPS; sleeve from shoulder seam.
         </p>
+        <MeasureDiagram />
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <label className="text-sm">
             I usually wear
@@ -490,6 +542,43 @@ function SizeGuide({
           Add {selectedSize} from the guide
         </button>
       </div>
+    </div>
+  );
+}
+
+function MeasureDiagram() {
+  return (
+    <div className="mt-6 border border-line p-4">
+      <p className="micro text-muted">How we measure</p>
+      <svg
+        viewBox="0 0 200 240"
+        className="mx-auto mt-3 h-48 w-40 text-ink"
+        aria-hidden
+      >
+        <rect x="70" y="20" width="60" height="16" fill="none" stroke="currentColor" />
+        <path
+          d="M70 36 L55 80 L55 200 L145 200 L145 80 L130 36"
+          fill="none"
+          stroke="currentColor"
+        />
+        <line x1="40" y1="90" x2="160" y2="90" stroke="currentColor" strokeDasharray="3 3" />
+        <line x1="55" y1="36" x2="55" y2="200" stroke="currentColor" strokeDasharray="3 3" />
+        <text x="100" y="84" textAnchor="middle" fontSize="8">
+          chest
+        </text>
+        <text x="32" y="120" fontSize="8" transform="rotate(-90 32 120)">
+          length
+        </text>
+        <text x="100" y="216" textAnchor="middle" fontSize="8">
+          HPS to hem
+        </text>
+      </svg>
+      <ul className="mt-2 space-y-1 text-xs text-muted">
+        <li>Chest — 1&quot; below armhole, garment laid flat × 2</li>
+        <li>Length — high point shoulder to hem</li>
+        <li>Sleeve — shoulder seam to cuff</li>
+        <li>Waist / hip — at the seam, laid flat × 2</li>
+      </ul>
     </div>
   );
 }

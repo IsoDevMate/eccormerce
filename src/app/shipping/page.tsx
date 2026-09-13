@@ -1,4 +1,10 @@
-export const metadata = { title: "Shipping & returns" };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shipping & returns",
+  description:
+    "Sable shipping windows, mill delays shown on product, and 30-day prepaid returns.",
+};
 
 export default function ShippingPage() {
   return (
@@ -6,8 +12,8 @@ export default function ShippingPage() {
       <p className="micro text-muted">Dates, not surprises</p>
       <h1 className="display mt-3 text-6xl">When it actually ships.</h1>
       <p className="mt-6 text-sm text-muted">
-        Yeezy-style stores bury weeks of wait. We put the window on the product,
-        estimate it from your ZIP, and repeat it here.
+        We put the window on the product, estimate it from your ZIP, and repeat
+        it here. Nothing is buried behind checkout.
       </p>
       <table className="mt-10 w-full text-left text-sm">
         <thead>
@@ -18,7 +24,7 @@ export default function ShippingPage() {
         </thead>
         <tbody>
           <tr className="border-b border-line">
-            <td className="py-3">US studio stock</td>
+            <td className="py-3">UK / EU studio stock</td>
             <td>2–6 business days</td>
           </tr>
           <tr className="border-b border-line">
@@ -35,6 +41,9 @@ export default function ShippingPage() {
           </tr>
         </tbody>
       </table>
+      <p className="mt-8 text-sm text-muted">
+        Sable Studio Ltd · 18 Great Portland Street, London W1W 8QP
+      </p>
     </div>
   );
 }
