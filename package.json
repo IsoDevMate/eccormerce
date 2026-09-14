@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "visual:smoke": "node scripts/visual-smoke.mjs"
+    "visual:smoke": "node scripts/visual-smoke.mjs",
+    "visual:qa": "node scripts/interaction-qa.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

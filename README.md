@@ -43,10 +43,11 @@ Do **not** ship UI changes from code-only review:
 
 ```bash
 npm run dev          # terminal 1
-npm run visual:smoke # terminal 2 — writes .local/visual/sable/*.png
+npm run visual:smoke # first-viewport PNGs → .local/visual/sable/
+npm run visual:qa    # interaction asserts → .local/visual/qa/
 ```
 
-Open the PNGs. Judge desire, hierarchy, and broken media — not “does the component exist.”
+Open the PNGs **and** confirm `visual:qa` prints all PASS. Judge desire, hierarchy, broken media, and whether hover/modals actually fire — not “does the component exist.”
 
 Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md).
 

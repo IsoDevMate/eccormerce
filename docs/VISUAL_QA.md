@@ -35,13 +35,37 @@ Writes desktop + mobile first-viewport PNGs for:
 
 into `.local/visual/sable/`. Cookie banner is dismissed via `localStorage` so the fold stays readable.
 
+## Interaction QA (required for modals / hover / IA)
+
+Screenshot smoke is not enough for Quick Add, swatch hover, mailing list, or waitlist. Run:
+
+```bash
+npm run dev          # terminal 1
+npm run visual:qa    # terminal 2 — asserts behaviour, writes .local/visual/qa/
+```
+
+Checks (must all PASS):
+
+- Index at `/` (codes grid, gender tabs, nav)
+- `/lookbook` → `/`
+- Shop cards + Sort chip
+- Hover: Quick Add, wishlist, quick view, image crossfade
+- Swatch hover image swap
+- Quick view drawer
+- `/shop/new` grid not sparse (≥8 cards)
+- PDP: Select a size, Size guide, Model sizing, Details / Fit / Shipping
+- Coming soon → Notify/waitlist modal (with image panel)
+- Mailing list modal after ~8s: heading, Submit, No thanks, split grid
+
+Report: `.local/visual/qa/report.json`.
+
 ### What smoke already caught once
 
 - Featured “fashion” video was a **globe** animation → removed until real footage
 - **19 Unsplash 404s** → broken cards / category thumbs
 - PDP image mismatched the named garment
 
-Re-run smoke after any catalog or PLP/PDP change.
+Re-run smoke after any catalog or PLP/PDP change. Re-run `visual:qa` after any modal, hover, or IA change.
 
 ## Blaize source video (local, not in repo)
 
