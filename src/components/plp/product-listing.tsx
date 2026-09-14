@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart-store";
 import { useWishlist } from "@/lib/wishlist-store";
 import { QuickView } from "@/components/plp/quick-view";
+import { WaitlistModal } from "@/components/site/waitlist-modal";
 
 type Setting = "worn" | "studio";
 type Density = 1 | 2 | 4;
@@ -23,7 +24,7 @@ type Props = {
   heading?: string;
   showGenderTabs?: boolean;
   initialGender?: GenderTab;
-  editorial: {
+  editorial?: {
     kicker: string;
     title: string;
     body: string;
@@ -379,7 +380,7 @@ export function ProductListing({
               featured={index === 0}
             />,
           ];
-          if (index === insertAt - 1) {
+          if (editorial && index === insertAt - 1) {
             nodes.push(
               <article
                 key="editorial"
@@ -481,6 +482,7 @@ function ProductCard({
   const [hovered, setHovered] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [swatchPreview, setSwatchPreview] = useState(false);
   const saved = has(product.id);
 
@@ -490,6 +492,10 @@ function ProductCard({
     setting,
   );
   const sizes = variant?.sizes ?? [];
+  const allOut =
+    !product.comingSoon &&
+    sizes.length > 0 &&
+    sizes.every((item) => !item.inStock);
   const showSecondary =
     hovered && Boolean(secondary) && !quickOpen && !swatchPreview;
 
@@ -605,48 +611,57 @@ function ProductCard({
           </div>
         ) : null}
 
-        {!product.comingSoon ? (
-          <div
-            className={cn(
-              "absolute inset-x-0 bottom-0 z-10 motion-rise",
-              "translate-y-0 opacity-100 md:translate-y-full md:opacity-0",
-              "md:group-hover:translate-y-0 md:group-hover:opacity-100",
-              quickOpen && "md:translate-y-0 md:opacity-100",
-            )}
-          >
-            {quickOpen ? (
-              <div className="flex flex-wrap justify-center gap-1 bg-ink/95 p-2">
-                {sizes.map((item) => (
-                  <button
-                    key={item.size}
-                    type="button"
-                    disabled={!item.inStock}
-                    onClick={() => addSize(item.size)}
-                    className={cn(
-                      "min-w-9 px-2 py-2 text-xs text-paper",
-                      item.inStock
-                        ? "hover:bg-paper hover:text-ink"
-                        : "cursor-not-allowed text-paper/40 line-through size-hatched",
-                    )}
-                  >
-                    {item.size}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="micro w-full bg-ink py-3 text-center text-paper"
-                onClick={(event) => {
-                  event.preventDefault();
-                  setQuickOpen(true);
-                }}
-              >
-                Quick add
-              </button>
-            )}
-          </div>
-        ) : null}
+        <div
+          className={cn(
+            "absolute inset-x-0 bottom-0 z-10 motion-rise",
+            "translate-y-0 opacity-100 md:translate-y-full md:opacity-0",
+            "md:group-hover:translate-y-0 md:group-hover:opacity-100",
+            quickOpen && "md:translate-y-0 md:opacity-100",
+          )}
+        >
+          {product.comingSoon || allOut ? (
+            <button
+              type="button"
+              className="micro w-full border border-ink bg-paper/95 py-3 text-center"
+              onClick={(event) => {
+                event.preventDefault();
+                setWaitlistOpen(true);
+              }}
+            >
+              {product.comingSoon ? "Notify me" : "Out of stock"}
+            </button>
+          ) : quickOpen ? (
+            <div className="flex flex-wrap justify-center gap-1 bg-ink/95 p-2">
+              {sizes.map((item) => (
+                <button
+                  key={item.size}
+                  type="button"
+                  disabled={!item.inStock}
+                  onClick={() => addSize(item.size)}
+                  className={cn(
+                    "min-w-9 px-2 py-2 text-xs text-paper",
+                    item.inStock
+                      ? "hover:bg-paper hover:text-ink"
+                      : "cursor-not-allowed text-paper/40 line-through size-hatched",
+                  )}
+                >
+                  {item.size}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="micro w-full bg-ink py-3 text-center text-paper"
+              onClick={(event) => {
+                event.preventDefault();
+                setQuickOpen(true);
+              }}
+            >
+              Quick add
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mt-2.5 space-y-0.5 px-0.5">
@@ -700,6 +715,15 @@ function ProductCard({
       </div>
       {viewOpen ? (
         <QuickView product={product} onClose={() => setViewOpen(false)} />
+      ) : null}
+      {waitlistOpen ? (
+        <WaitlistModal
+          productName={product.name}
+          productCode={product.code}
+          image={primary?.src}
+          mode={product.comingSoon ? "notify" : "waitlist"}
+          onClose={() => setWaitlistOpen(false)}
+        />
       ) : null}
     </article>
   );

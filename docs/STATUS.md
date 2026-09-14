@@ -6,6 +6,7 @@ Last docs update: 2026-09-14. Branch: `main`.
 
 - **Index-first entry:** `/` is the sparse product-code lookbook; `/shop` is the full commerce grid; `/lookbook` → `/`
 - Women / Men deep links + Index gender tabs (All / Women / Men)
+- SENSE-style mailing list modal (split image + form, delayed 8s) + waitlist/notify for coming soon & OOS
 - Ship-ready surface: 404, meta, OG, favicon, robots, sitemap, privacy, terms, thank-you, cookie + analytics
 - Checkout validation + thank-you (no `alert`)
 - PDP: swatch-themed ATC, size guide / fit predictor, sticky mobile ATC, shipping honesty

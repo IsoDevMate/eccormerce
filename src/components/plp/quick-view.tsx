@@ -7,6 +7,7 @@ import type { Product } from "@/types/product";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { WaitlistModal } from "@/components/site/waitlist-modal";
 
 type Props = {
   product: Product;
@@ -21,6 +22,7 @@ export function QuickView({ product, onClose }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   const variant =
     product.variants.find((item) => item.id === variantId) ?? product.variants[0];
@@ -188,9 +190,13 @@ export function QuickView({ product, onClose }: Props) {
             </div>
 
             {product.comingSoon ? (
-              <p className="mt-6 border border-line px-4 py-3 text-sm text-muted">
-                Coming soon — open the product for notify.
-              </p>
+              <button
+                type="button"
+                onClick={() => setWaitlistOpen(true)}
+                className="mt-6 w-full border border-ink py-3.5 text-sm pressable"
+              >
+                Notify me at drop
+              </button>
             ) : (
               <button
                 type="button"
@@ -221,6 +227,15 @@ export function QuickView({ product, onClose }: Props) {
           </div>
         </div>
       </aside>
+      {waitlistOpen ? (
+        <WaitlistModal
+          productName={product.name}
+          productCode={product.code}
+          image={active?.src}
+          mode="notify"
+          onClose={() => setWaitlistOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

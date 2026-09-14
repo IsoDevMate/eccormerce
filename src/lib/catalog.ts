@@ -66,10 +66,10 @@ export function searchProducts(query: string) {
   );
 }
 
-export function getNewArrivals() {
+export function getNewArrivals(limit = 12) {
   return [...products]
-    .filter((product) => product.badge === "New" || product.comingSoon)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, limit);
 }
 
 export function getProductsByLine(line: string) {

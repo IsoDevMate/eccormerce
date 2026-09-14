@@ -61,6 +61,7 @@ Details: [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md).
 - Thank-you page (checkout validates; no `alert`)
 - Loading states, form error states, sticky mobile ATC
 - Quiet PLP filters (text chips — sort / category / color / size)
+- SENSE-style mailing list modal (split panel, 8s delay) + waitlist/notify for OOS / coming soon
 - Badge discipline: 1 Best Seller, 1 New, 1 Limited
 - Catalog images: unique Unsplash IDs, dead URLs replaced after Playwright smoke
 - Featured PLP video **only when real garment footage exists** (globe placeholders removed)

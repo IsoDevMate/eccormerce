@@ -10,6 +10,7 @@ import { brandComparisons, predictSableSize } from "@/data/catalog";
 import { getRelated } from "@/lib/catalog";
 import { productFaq } from "@/lib/product-modules";
 import { cn } from "@/lib/cn";
+import { WaitlistModal } from "@/components/site/waitlist-modal";
 
 export function ProductDetail({ product }: { product: Product }) {
   const { addLine } = useCart();
@@ -22,6 +23,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const [compareSize, setCompareSize] = useState("S");
   const [added, setAdded] = useState(false);
   const [showModelSizing, setShowModelSizing] = useState(true);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   const variant = product.variants.find((item) => item.id === variantId) ?? product.variants[0];
   const images = variant?.images ?? [];
@@ -210,12 +212,13 @@ export function ProductDetail({ product }: { product: Product }) {
           </div>
 
           {product.comingSoon ? (
-            <Link
-              href="#notes"
-              className="mt-8 block border border-ink py-4 text-center text-sm"
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
+              className="mt-8 block w-full border border-ink py-4 text-center text-sm pressable"
             >
               Notify me at drop
-            </Link>
+            </button>
           ) : (
             <button
               type="button"
@@ -338,6 +341,16 @@ export function ProductDetail({ product }: { product: Product }) {
             });
             setAdded(true);
           }}
+        />
+      ) : null}
+
+      {waitlistOpen ? (
+        <WaitlistModal
+          productName={product.name}
+          productCode={product.code}
+          image={activeImage?.src}
+          mode="notify"
+          onClose={() => setWaitlistOpen(false)}
         />
       ) : null}
 
