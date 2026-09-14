@@ -2,23 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useCart, PROTECTION_PRICE } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 export function CartDrawer() {
   const {
     isOpen,
     closeCart,
     lines,
-    subtotal,
     setQuantity,
     removeLine,
     setGiftWrap,
     protection,
     setProtection,
   } = useCart();
+  const [visible, setVisible] = useState(false);
+  const [entered, setEntered] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      const id = window.requestAnimationFrame(() => setEntered(true));
+      return () => window.cancelAnimationFrame(id);
+    }
+    setEntered(false);
+    const timer = window.setTimeout(() => setVisible(false), 300);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
+
+  if (!visible) return null;
 
   const products = lines.filter((line) => line.kind !== "protection");
   const gift = 0;
@@ -32,14 +46,22 @@ export function CartDrawer() {
   const total = merchandise + wrapCount * gift + shipping + protectionCost;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-ink/40">
+    <div className="fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
-        className="h-full flex-1"
+        className={cn(
+          "absolute inset-0 bg-ink/40 motion-fade",
+          entered ? "opacity-100" : "opacity-0",
+        )}
         aria-label="Close bag"
         onClick={closeCart}
       />
-      <aside className="flex h-full w-full max-w-md flex-col border-l border-ink bg-paper">
+      <aside
+        className={cn(
+          "relative flex h-full w-full max-w-md flex-col border-l border-ink bg-paper motion-rise",
+          entered ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0",
+        )}
+      >
         <div className="flex items-center justify-between border-b border-ink px-5 py-4">
           <h2 className="micro">Bag</h2>
           <button type="button" className="micro" onClick={closeCart}>
@@ -58,13 +80,15 @@ export function CartDrawer() {
                 className="flex gap-4 border-b border-line px-5 py-4"
               >
                 {line.image ? (
-                  <Image
-                    src={line.image}
-                    alt={line.name}
-                    width={80}
-                    height={100}
-                    className="h-[100px] w-20 object-cover"
-                  />
+                  <div className="relative h-[100px] w-20 shrink-0 bg-paper-2">
+                    <Image
+                      src={line.image}
+                      alt={line.name}
+                      fill
+                      className="object-cover object-[center_20%]"
+                      sizes="80px"
+                    />
+                  </div>
                 ) : null}
                 <div className="flex-1">
                   <p className="micro text-muted">{line.line}</p>

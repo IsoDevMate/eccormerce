@@ -41,6 +41,8 @@ type CartContextValue = {
   setProtection: (on: boolean) => void;
   count: number;
   subtotal: number;
+  /** Increments on each successful add — drives bag micro-feedback */
+  addEpoch: number;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -50,6 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [addEpoch, setAddEpoch] = useState(0);
 
   useEffect(() => {
     try {
@@ -82,6 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           { ...incoming, key, quantity: incoming.quantity ?? 1 },
         ];
       });
+      setAddEpoch((current) => current + 1);
       setIsOpen(true);
     };
 
@@ -91,6 +95,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       openCart: () => setIsOpen(true),
       closeCart: () => setIsOpen(false),
       addLine,
+      addEpoch,
       removeLine: (key) =>
         setLines((current) => current.filter((line) => line.key !== key)),
       setQuantity: (key, quantity) =>
@@ -136,7 +141,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         .reduce((sum, line) => sum + line.quantity, 0),
       subtotal: lines.reduce((sum, line) => sum + line.price * line.quantity, 0),
     };
-  }, [lines, isOpen]);
+  }, [lines, isOpen, addEpoch]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

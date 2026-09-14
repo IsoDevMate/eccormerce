@@ -8,18 +8,19 @@ const columns = [
   {
     title: "Shop",
     links: [
-      { href: "/shop/new", label: "New arrivals" },
-      { href: "/", label: "Shop" },
+      { href: "/", label: "Index" },
+      { href: "/shop", label: "Shop" },
+      { href: "/shop/new", label: "New" },
       { href: "/shop/women", label: "Women" },
       { href: "/shop/men", label: "Men" },
-      { href: "/size-guide", label: "Size & fit" },
     ],
   },
   {
     title: "House",
     links: [
-      { href: "/shipping", label: "Shipping & returns" },
-      { href: "/service", label: "Customer service" },
+      { href: "/shipping", label: "Shipping" },
+      { href: "/service", label: "Service" },
+      { href: "/size-guide", label: "Size & fit" },
       { href: "/privacy", label: "Privacy" },
       { href: "/terms", label: "Terms" },
     ],
@@ -33,22 +34,15 @@ export function Footer() {
 
   return (
     <footer className="border-t border-ink bg-ink text-paper">
-      <div className="grid gap-12 px-4 py-16 md:grid-cols-12 md:px-6">
-        <div className="md:col-span-5">
-          <p className="display text-5xl md:text-7xl">Fewer pieces. Worn longer.</p>
-          <p className="mt-6 max-w-sm text-sm text-paper/70">
-            Enter the grid. Fit, ship dates, and service sit next to the
-            purchase — not behind it.
+      <div className="grid gap-10 px-4 py-12 md:grid-cols-12 md:px-6 md:py-14">
+        <div className="md:col-span-4">
+          <p className="font-sans text-2xl font-medium tracking-tight md:text-3xl">
+            Fewer pieces.
           </p>
-          <address className="mt-6 text-sm not-italic text-paper/55">
+          <address className="mt-5 text-xs not-italic leading-relaxed text-paper/55">
             Sable Studio Ltd
             <br />
-            18 Great Portland Street
-            <br />
-            London W1W 8QP
-            <br />
-            United Kingdom
-            <br />
+            London ·{" "}
             <a className="underline" href="mailto:service@sable.studio">
               service@sable.studio
             </a>
@@ -56,8 +50,8 @@ export function Footer() {
         </div>
         {columns.map((column) => (
           <div key={column.title} className="md:col-span-2">
-            <p className="micro mb-4 text-paper/50">{column.title}</p>
-            <ul className="space-y-2 text-sm">
+            <p className="micro mb-3 text-paper/45">{column.title}</p>
+            <ul className="space-y-2 text-sm text-paper/85">
               {column.links.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:underline">
@@ -69,7 +63,7 @@ export function Footer() {
           </div>
         ))}
         <form
-          className="md:col-span-3"
+          className="md:col-span-4"
           action={(formData) => {
             setError(null);
             setOk(false);
@@ -83,7 +77,7 @@ export function Footer() {
             });
           }}
         >
-          <p className="micro mb-4 text-paper/50">Archive notes</p>
+          <p className="micro mb-3 text-paper/45">Notes</p>
           <label className="sr-only" htmlFor="footer-email">
             Email
           </label>
@@ -92,9 +86,9 @@ export function Footer() {
             name="email"
             type="email"
             required
-            placeholder="Email address"
+            placeholder="Email"
             aria-invalid={Boolean(error)}
-            className="w-full border border-paper/30 bg-transparent px-3 py-3 text-sm placeholder:text-paper/40 focus-ring"
+            className="w-full border border-paper/30 bg-transparent px-3 py-2.5 text-sm placeholder:text-paper/40 focus-ring"
           />
           {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
           {ok ? (
@@ -103,17 +97,14 @@ export function Footer() {
           <button
             type="submit"
             disabled={pending}
-            className="mt-3 w-full bg-paper px-3 py-3 text-sm text-ink disabled:opacity-60"
+            className="mt-2 w-full bg-paper px-3 py-2.5 text-sm text-ink disabled:opacity-60"
           >
-            {pending ? "Sending…" : "Receive updates"}
+            {pending ? "…" : "Subscribe"}
           </button>
-          <p className="mt-3 text-xs text-paper/45">
-            Delayed, not shouted. We send drops and restocks only.
-          </p>
         </form>
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/15 px-4 py-4 text-[11px] uppercase tracking-[0.16em] text-paper/50 md:px-6">
-        <span>© {new Date().getFullYear()} Sable Studio Ltd</span>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/15 px-4 py-3 text-[10px] uppercase tracking-[0.16em] text-paper/45 md:px-6">
+        <span>© {new Date().getFullYear()} Sable</span>
         <span className="flex gap-3">
           <Link href="/privacy" className="hover:underline">
             Privacy

@@ -13,6 +13,7 @@ mkdirSync(out, { recursive: true });
 
 const routes = [
   { path: "/", name: "home" },
+  { path: "/shop", name: "shop" },
   { path: "/shop/women", name: "women" },
   { path: "/shop/men", name: "men" },
   { path: "/product/long-slip-dress", name: "pdp-slip" },

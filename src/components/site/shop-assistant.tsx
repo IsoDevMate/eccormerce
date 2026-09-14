@@ -8,7 +8,7 @@ const prompts = [
     id: "fit",
     label: "What size should I choose?",
     answer:
-      "Open the size guide on any garment. Compare a brand you already wear (COS, Acne, Levi’s, Everlane), then add from the chart. Model height and worn size sit on the photo. We do not hide mill delays.",
+      "Open the size guide on any garment. Compare a brand you already wear, then add from the chart. Model height and worn size sit on the photo.",
     href: "/size-guide",
     cta: "Open house fit",
   },
@@ -16,7 +16,7 @@ const prompts = [
     id: "ship",
     label: "When will this arrive?",
     answer:
-      "Studio stock is 2–6 business days. Mill pieces are 10–21, shown on the product. Preorders 4–6 weeks. Enter a ZIP on the PDP for an estimate. Package protection is optional in the bag — off until you check it.",
+      "Studio stock is 2–6 business days. Mill pieces are 10–21, shown on the product. Enter a ZIP on the product for an estimate.",
     href: "/shipping",
     cta: "Shipping dates",
   },
@@ -24,15 +24,15 @@ const prompts = [
     id: "line",
     label: "Which line is right?",
     answer:
-      "Soft Lounge is drape. Studio is the daily block. Knit is merino. Outer is boiled wool and the field jacket tease. Archive is cap and belt. Every line is on the homepage; clothing splits women and men.",
-    href: "/",
+      "Soft Lounge is drape. Studio is the daily block. Knit is merino. Outer is boiled wool. Archive is cap and belt.",
+    href: "/shop",
     cta: "See the house",
   },
   {
     id: "gift",
     label: "Can I send this as a gift?",
     answer:
-      "Yes. Complimentary wrap is a checkbox on each bag line. Shipping estimators and a direct service line sit on the product so the recipient is not guessing.",
+      "Yes. Complimentary wrap is a checkbox on each bag line. A direct service line sits on every product.",
     href: "/service",
     cta: "Talk to service",
   },
@@ -46,16 +46,20 @@ export function ShopAssistant() {
     <div className="fixed bottom-4 right-4 z-40">
       {open ? (
         <div
-          className="mb-3 w-[min(92vw,22rem)] border border-ink bg-paper p-4 shadow-[6px_6px_0_0_#141414]"
+          className="mb-3 w-[min(92vw,22rem)] border border-ink bg-paper p-4"
           role="dialog"
           aria-label="Shop assistant"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="micro text-muted">Guided, not a chatbot</p>
-              <p className="mt-1 text-sm">Pick a question. Answers come from the store, not an open box.</p>
+              <p className="micro text-muted">Help</p>
+              <p className="mt-1 text-sm">Pick a question.</p>
             </div>
-            <button type="button" className="micro" onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              className="micro pressable"
+              onClick={() => setOpen(false)}
+            >
               Close
             </button>
           </div>
@@ -64,7 +68,7 @@ export function ShopAssistant() {
               <li key={prompt.id}>
                 <button
                   type="button"
-                  className="w-full border border-line px-3 py-2 text-left text-sm hover:border-ink"
+                  className="w-full border border-line px-3 py-2 text-left text-sm pressable hover:border-ink"
                   onClick={() => setActive(prompt)}
                 >
                   {prompt.label}
@@ -75,13 +79,16 @@ export function ShopAssistant() {
           {active ? (
             <div className="mt-4 border-t border-line pt-4">
               <p className="text-sm">{active.answer}</p>
-              <Link href={active.href} className="micro mt-3 inline-block underline">
+              <Link
+                href={active.href}
+                className="micro mt-3 inline-block underline"
+              >
                 {active.cta}
               </Link>
             </div>
           ) : null}
           <p className="mt-4 text-xs text-muted">
-            Nothing you type is stored. For a person,{" "}
+            For a person,{" "}
             <Link href="/service" className="underline">
               write service
             </Link>
@@ -91,10 +98,10 @@ export function ShopAssistant() {
       ) : null}
       <button
         type="button"
-        className="border border-ink bg-ink px-4 py-3 text-sm text-paper"
+        className="border border-line bg-paper px-3 py-2 text-xs text-ink pressable hover:border-ink"
         onClick={() => setOpen((current) => !current)}
       >
-        Help choosing
+        Help
       </button>
     </div>
   );

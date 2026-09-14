@@ -27,7 +27,8 @@ npm run visual:smoke
 
 Writes desktop + mobile first-viewport PNGs for:
 
-- `/`
+- `/` (Index)
+- `/shop`
 - `/shop/women`
 - `/shop/men`
 - `/product/long-slip-dress`

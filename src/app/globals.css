@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f4f1eb;
-  --paper-2: #ece7dd;
+  --paper: #f7f4ee;
+  --paper-2: #efe9df;
   --ink: #141414;
   --muted: #6d675e;
-  --line: #ddd6c8;
+  --line: #e2dbd0;
   --line-strong: #141414;
   --danger: #8a2e1f;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 300ms;
 }
 
 @theme inline {
@@ -36,17 +38,6 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 80;
-  opacity: 0.035;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 ::selection {
@@ -82,6 +73,86 @@ select {
 .focus-ring:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
+}
+
+/* Shared motion — transform + opacity only */
+.motion-fade {
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.motion-rise {
+  transition:
+    opacity var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
+}
+
+.media-frame {
+  background: var(--paper-2);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.media-frame img,
+.media-frame video {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.size-hatched:disabled {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 3px,
+    rgba(20, 20, 20, 0.08) 3px,
+    rgba(20, 20, 20, 0.08) 6px
+  );
+}
+
+.pressable {
+  transition:
+    opacity var(--dur) var(--ease-out),
+    transform 180ms var(--ease-out),
+    background-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.pressable:active {
+  transform: scale(0.98);
+}
+
+.overlay-scrim {
+  background: rgba(20, 20, 20, 0.4);
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.drawer-panel {
+  transition:
+    transform var(--dur) var(--ease-out),
+    opacity var(--dur) var(--ease-out);
+  transform: translateX(12px);
+  opacity: 0;
+}
+
+.drawer-panel[data-open="true"] {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+@keyframes bag-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bag-flash {
+  animation: bag-pulse 420ms var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {

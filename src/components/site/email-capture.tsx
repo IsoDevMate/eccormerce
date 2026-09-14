@@ -20,12 +20,12 @@ export function EmailCapture() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-4 md:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center overlay-scrim p-4 md:items-center"
       role="dialog"
       aria-labelledby="email-title"
     >
       <form
-        className="w-full max-w-md border border-ink bg-paper p-6 shadow-[8px_8px_0_0_#141414]"
+        className="w-full max-w-md border border-ink bg-paper p-6"
         action={(formData) => {
           startTransition(async () => {
             const result = await subscribeEmail(formData);
@@ -38,13 +38,12 @@ export function EmailCapture() {
           });
         }}
       >
-        <p className="micro text-muted">After a look around</p>
-        <h2 id="email-title" className="display mt-3 text-4xl">
-          Receive archive updates
+        <p className="micro text-muted">Updates</p>
+        <h2 id="email-title" className="mt-3 text-2xl font-semibold tracking-tight">
+          Receive archive notes
         </h2>
         <p className="mt-3 text-sm text-muted">
-          New releases are teased here first. No blast on arrival — this waited
-          eight seconds on purpose.
+          New releases first. This waited eight seconds on purpose.
         </p>
         <label className="sr-only" htmlFor="popup-email">
           Email address
@@ -61,17 +60,16 @@ export function EmailCapture() {
         <button
           type="submit"
           disabled={pending}
-          className="mt-3 w-full bg-ink px-3 py-3 text-sm text-paper disabled:opacity-60"
+          className="mt-3 w-full bg-ink px-3 py-3.5 text-sm text-paper pressable disabled:opacity-60"
         >
-          {pending ? "Sending…" : "Next"}
+          {pending ? "Sending…" : "Subscribe"}
         </button>
         <p className="mt-3 text-xs leading-relaxed text-muted">
-          I consent to receive Sable email. You can leave anytime. We do not
-          sell the list.
+          Consent to Sable email. Leave anytime.
         </p>
         <button
           type="button"
-          className="micro mt-5 text-[10px] text-muted underline"
+          className="micro mt-5 text-[10px] text-muted underline pressable"
           onClick={() => {
             localStorage.setItem(KEY, "1");
             setOpen(false);

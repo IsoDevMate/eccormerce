@@ -17,7 +17,7 @@ export default function NewArrivalsPage() {
         kicker: "Drop",
         title: "What landed.",
         body: "New is first in the nav because it is first in the house.",
-        href: "/",
+        href: "/shop",
         image:
           "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=1200&q=70",
       }}

@@ -5,6 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://eccormerce-alpha.vercel.app";
   const staticRoutes = [
     "",
+    "/shop",
     "/shop/new",
     "/shop/women",
     "/shop/men",
@@ -18,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}${path || "/"}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: path === "" ? 1 : 0.7,
+    priority: path === "" ? 1 : path === "/shop" ? 0.9 : 0.7,
   }));
 
   const products = getAllProducts().map((product) => ({

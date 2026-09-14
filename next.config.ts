@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   async redirects() {
-    return [{ source: "/shop", destination: "/", permanent: false }];
+    return [{ source: "/lookbook", destination: "/", permanent: false }];
   },
   images: {
     formats: ["image/avif", "image/webp"],

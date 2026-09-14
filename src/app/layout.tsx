@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { CartProvider } from "@/lib/cart-store";
+import { WishlistProvider } from "@/lib/wishlist-store";
 import { Announcement } from "@/components/site/announcement";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
@@ -34,24 +35,24 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Sable — Shop",
+    default: "Sable — Index",
     template: "%s — Sable",
   },
   description:
-    "Shop Sable. Twenty-six pieces photographed on people, sized in the open. Enter the grid — Women and Men as one-click filters.",
+    "Sable index. Twenty-six pieces as codes. Shop the grid when you want names, sizes, and prices.",
   openGraph: {
     type: "website",
     locale: "en_GB",
     siteName: "Sable",
-    title: "Sable — Shop",
+    title: "Sable — Index",
     description:
-      "Twenty-six pieces. Model shots first. Fit and shipping on the product — not after checkout.",
+      "Quiet product index first. Shop and fit details one click away.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sable — Shop",
+    title: "Sable — Index",
     description:
-      "Twenty-six pieces. Model shots first. Fit and shipping on the product.",
+      "Quiet product index first. Shop and fit details one click away.",
   },
 };
 
@@ -66,16 +67,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${instrument.variable} antialiased`}
       >
         <CartProvider>
-          <Announcement />
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <EmailCapture />
-          <CartDrawer />
-          <SearchDialog />
-          <ShopAssistant />
-          <CookieBanner />
-          <ConsentAnalytics />
+          <WishlistProvider>
+            <Announcement />
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <EmailCapture />
+            <CartDrawer />
+            <SearchDialog />
+            <ShopAssistant />
+            <CookieBanner />
+            <ConsentAnalytics />
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

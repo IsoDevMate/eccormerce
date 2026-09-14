@@ -8,7 +8,7 @@ import { useCart } from "@/lib/cart-store";
 import { cmFromInches, contrastOn, formatHeight, formatPrice } from "@/lib/format";
 import { brandComparisons, predictSableSize } from "@/data/catalog";
 import { getRelated } from "@/lib/catalog";
-import { productChips, productFaq, productHowTo, productUgc } from "@/lib/product-modules";
+import { productFaq } from "@/lib/product-modules";
 import { cn } from "@/lib/cn";
 
 export function ProductDetail({ product }: { product: Product }) {
@@ -18,10 +18,10 @@ export function ProductDetail({ product }: { product: Product }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [guideOpen, setGuideOpen] = useState(false);
   const [unit, setUnit] = useState<"in" | "cm">("in");
-  const [zip, setZip] = useState("");
   const [compareBrand, setCompareBrand] = useState("COS");
   const [compareSize, setCompareSize] = useState("S");
   const [added, setAdded] = useState(false);
+  const [showModelSizing, setShowModelSizing] = useState(true);
 
   const variant = product.variants.find((item) => item.id === variantId) ?? product.variants[0];
   const images = variant?.images ?? [];
@@ -32,26 +32,13 @@ export function ProductDetail({ product }: { product: Product }) {
     [compareBrand, compareSize],
   );
 
-  const estimate = useMemo(() => {
-    if (!zip) return null;
-    const international = zip.trim().length > 5 && /[A-Za-z]/.test(zip);
-    if (international) {
-      return `International: ${product.shippingDays.min + 10}–${product.shippingDays.max + 14} days. Duties billed at delivery.`;
-    }
-    return `Arrives in ${product.shippingDays.min}–${product.shippingDays.max} business days to ${zip}.`;
-  }, [zip, product.shippingDays]);
-
   const hex = variant?.hex ?? "#141414";
   const ctaColor = contrastOn(hex);
   const selectedSize = size ?? predicted;
 
   function add() {
     if (!variant || product.comingSoon) return;
-    const chosen = size;
-    if (!chosen) {
-      setGuideOpen(true);
-      return;
-    }
+    if (!size) return;
     const image =
       variant.images.find((item) => item.kind === "model") ?? variant.images[0];
     addLine({
@@ -62,73 +49,109 @@ export function ProductDetail({ product }: { product: Product }) {
       image: image?.src ?? "",
       color: variant.name,
       colorHex: variant.hex,
-      size: chosen,
+      size,
       price: product.price,
     });
     setAdded(true);
   }
 
+  function stepImage(delta: number) {
+    if (images.length === 0) return;
+    setImageIndex((current) => (current + delta + images.length) % images.length);
+  }
+
   return (
     <div>
-      <div className="grid border-b border-line lg:grid-cols-2">
-        <div className="border-b border-line lg:border-b-0 lg:border-r">
-          <div className="relative aspect-[4/5] bg-paper-2">
+      <div className="grid lg:grid-cols-2">
+        <div className="lg:border-r lg:border-line">
+          <div className="media-frame relative">
             {activeImage ? (
               <Image
+                key={activeImage.src}
                 src={activeImage.src}
                 alt={activeImage.alt}
                 fill
                 priority
-                className="object-cover"
-                sizes="50vw"
+                className="object-cover object-[center_20%] motion-fade"
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
             ) : null}
-            <p className="micro absolute bottom-4 left-4 bg-paper/90 px-2 py-1">
-              Model {formatHeight(product.model.heightCm)} · wears {product.model.size}
-            </p>
+
+            {images.length > 1 ? (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous image"
+                  onClick={() => stepImage(-1)}
+                  className="absolute left-3 top-1/2 z-10 -translate-y-1/2 px-2 py-3 text-sm text-ink/70 hover:text-ink"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next image"
+                  onClick={() => stepImage(1)}
+                  className="absolute right-3 top-1/2 z-10 -translate-y-1/2 px-2 py-3 text-sm text-ink/70 hover:text-ink"
+                >
+                  →
+                </button>
+              </>
+            ) : null}
+
+            {showModelSizing ? (
+              <p className="micro absolute bottom-4 left-4 bg-paper/90 px-2 py-1">
+                Model {formatHeight(product.model.heightCm)} · wears {product.model.size}
+              </p>
+            ) : null}
           </div>
-          <div className="grid grid-cols-4 border-t border-line">
-            {images.map((image, index) => (
-              <button
-                key={`${image.src}-${index}`}
-                type="button"
-                onClick={() => setImageIndex(index)}
-                className={cn(
-                  "relative aspect-square border-r border-line last:border-r-0",
-                  imageIndex === index && "ring-2 ring-inset ring-ink",
-                )}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt || `${product.name} ${index + 1}`}
-                  fill
-                  sizes="12vw"
-                  className="object-cover"
-                />
-              </button>
-            ))}
+
+          <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
+            <div className="flex gap-2 overflow-x-auto">
+              {images.map((image, index) => (
+                <button
+                  key={`${image.src}-${index}`}
+                  type="button"
+                  onClick={() => setImageIndex(index)}
+                  className={cn(
+                    "relative h-16 w-12 shrink-0 overflow-hidden bg-paper-2",
+                    imageIndex === index ? "opacity-100" : "opacity-50",
+                  )}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt || `${product.name} ${index + 1}`}
+                    fill
+                    sizes="48px"
+                    className="object-cover object-[center_20%]"
+                  />
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className={cn(
+                "micro shrink-0",
+                showModelSizing ? "underline" : "text-muted",
+              )}
+              onClick={() => setShowModelSizing((current) => !current)}
+            >
+              Model sizing
+            </button>
           </div>
         </div>
 
-        <div className="flex flex-col px-5 py-8 md:px-10">
-          <p className="micro text-muted">{product.line} · {product.code}</p>
-          <h1 className="display mt-3 text-5xl md:text-6xl">{product.name}</h1>
-          <p className="mt-4 text-lg">{formatPrice(product.price)}</p>
-          <p className="mt-4 max-w-md text-sm text-muted">{product.description}</p>
-
-          {productChips(product).length > 0 ? (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {productChips(product).map((chip) => (
-                <span key={chip} className="micro border border-line px-2 py-1">
-                  {chip}
-                </span>
-              ))}
-            </div>
-          ) : null}
+        <div className="flex flex-col px-5 py-8 md:px-10 lg:py-12">
+          <p className="micro text-muted">{product.line}</p>
+          <h1 className="mt-2 font-sans text-2xl font-medium tracking-tight md:text-3xl">
+            {product.name}
+          </h1>
+          <p className="mt-2 text-sm">{formatPrice(product.price)}</p>
 
           <div className="mt-8">
-            <p className="micro mb-3">Color — {variant?.name}</p>
-            <div className="flex gap-2">
+            <p className="text-sm">
+              Color — <span className="font-medium">{variant?.name}</span>
+            </p>
+            <div className="mt-3 flex gap-2">
               {product.variants.map((item) => (
                 <button
                   key={item.id}
@@ -139,8 +162,10 @@ export function ProductDetail({ product }: { product: Product }) {
                     setAdded(false);
                   }}
                   className={cn(
-                    "h-8 w-8 border",
-                    item.id === variant?.id ? "border-ink ring-1 ring-ink ring-offset-2" : "border-line",
+                    "h-8 w-8 rounded-full border motion-fade",
+                    item.id === variant?.id
+                      ? "border-ink ring-1 ring-ink ring-offset-2 ring-offset-paper"
+                      : "border-ink/20",
                   )}
                   style={{ backgroundColor: item.hex }}
                   aria-label={item.name}
@@ -157,7 +182,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 className="micro underline"
                 onClick={() => setGuideOpen(true)}
               >
-                Size guide · fit predictor
+                Size guide
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
@@ -166,10 +191,14 @@ export function ProductDetail({ product }: { product: Product }) {
                   key={item.size}
                   type="button"
                   disabled={!item.inStock}
-                  onClick={() => setSize(item.size)}
+                  onClick={() => {
+                    setSize(item.size);
+                    setAdded(false);
+                  }}
                   className={cn(
-                    "h-11 border text-sm",
-                    !item.inStock && "cursor-not-allowed text-muted line-through",
+                    "h-11 border text-sm motion-fade",
+                    !item.inStock &&
+                      "size-hatched cursor-not-allowed text-muted line-through",
                     item.inStock && size === item.size && "bg-ink text-paper",
                     item.inStock && size !== item.size && "border-ink bg-paper",
                   )}
@@ -178,9 +207,6 @@ export function ProductDetail({ product }: { product: Product }) {
                 </button>
               ))}
             </div>
-            <p className="mt-2 text-xs text-muted">
-              Solid size buttons — not a dropdown. Predicted from {compareBrand}: {predicted}.
-            </p>
           </div>
 
           {product.comingSoon ? (
@@ -194,103 +220,86 @@ export function ProductDetail({ product }: { product: Product }) {
             <button
               type="button"
               onClick={add}
-              className="mt-8 py-4 text-sm transition-colors duration-300"
+              className="mt-8 py-4 text-sm motion-fade"
               style={{ backgroundColor: hex, color: ctaColor }}
             >
-              {size
-                ? `Add ${variant?.name} / ${size} — ${formatPrice(product.price)}`
-                : "Select a size"}
+              {size ? `Add to bag — ${formatPrice(product.price)}` : "Select a size"}
             </button>
           )}
           {added ? (
-            <p className="mt-2 text-sm">In the bag. Keep looking — that’s the point.</p>
+            <p className="mt-2 text-sm motion-fade">In the bag.</p>
           ) : null}
 
-          <form
-            className="mt-6 border-t border-line pt-6"
-            onSubmit={(event) => {
-              event.preventDefault();
-            }}
-          >
-            <label className="micro" htmlFor="zip">
-              Shipping estimator
-            </label>
-            <div className="mt-2 flex gap-2">
-              <input
-                id="zip"
-                value={zip}
-                onChange={(event) => setZip(event.target.value)}
-                placeholder="ZIP or city"
-                className="flex-1 border border-ink bg-transparent px-3 py-3 text-sm focus-ring"
-              />
-              <button type="submit" className="border border-ink px-4 text-sm">
-                Check
-              </button>
-            </div>
-            {estimate ? (
-              <p className="mt-2 text-sm">{estimate}</p>
-            ) : (
-              <p className="mt-2 text-xs text-muted">
-                We show real windows — including 2–3 weeks when a mill is slow.
-                Nothing is hidden behind checkout.
-              </p>
-            )}
-          </form>
+          <div className="mt-10 border-t border-line">
+            <details className="group border-b border-line py-4" open>
+              <summary className="micro cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Details
+                  <span className="text-muted group-open:hidden">+</span>
+                  <span className="hidden text-muted group-open:inline">−</span>
+                </span>
+              </summary>
+              <div className="mt-3 space-y-2 text-sm text-muted">
+                <p>{product.description}</p>
+                <ul className="space-y-1">
+                  {product.highlights.slice(0, 4).map((item) => (
+                    <li key={item}>— {item}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
 
-          <ul className="mt-6 space-y-2 text-sm">
-            {product.highlights.map((item) => (
-              <li key={item}>— {item}</li>
-            ))}
-          </ul>
+            <details className="group border-b border-line py-4">
+              <summary className="micro cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Fit & fabric
+                  <span className="text-muted group-open:hidden">+</span>
+                  <span className="hidden text-muted group-open:inline">−</span>
+                </span>
+              </summary>
+              <div className="mt-3 space-y-2 text-sm text-muted">
+                <p>
+                  Fit — {product.fit}. Model {product.model.name} is{" "}
+                  {formatHeight(product.model.heightCm)} and wears {product.model.size}.
+                </p>
+                <p>{product.materials}</p>
+                <p>{product.care}</p>
+              </div>
+            </details>
 
-          <section className="mt-8 border-t border-line pt-6">
-            <p className="micro text-muted">How to</p>
-            <ol className="mt-4 space-y-4">
-              {productHowTo(product).map((step, index) => (
-                <li key={step.title}>
-                  <p className="micro text-muted">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-1 font-medium">{step.title}</p>
-                  <p className="mt-1 text-sm text-muted">{step.body}</p>
-                </li>
-              ))}
-            </ol>
-          </section>
+            <details className="group border-b border-line py-4">
+              <summary className="micro cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Shipping & returns
+                  <span className="text-muted group-open:hidden">+</span>
+                  <span className="hidden text-muted group-open:inline">−</span>
+                </span>
+              </summary>
+              <div className="mt-3 space-y-2 text-sm text-muted">
+                <p>
+                  {product.shippingDays.min}–{product.shippingDays.max} business days
+                  from the studio. 30-day returns, prepaid label.
+                </p>
+                <Link href="/shipping" className="inline-block text-ink underline">
+                  Full shipping table
+                </Link>
+                <div className="pt-2">
+                  {productFaq(product).map((item) => (
+                    <details key={item.q} className="border-t border-line py-2">
+                      <summary className="cursor-pointer text-ink">{item.q}</summary>
+                      <p className="mt-2">{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            </details>
+          </div>
 
-          <details className="mt-8 border-t border-line py-4">
-            <summary className="micro cursor-pointer">Materials & care</summary>
-            <p className="mt-3 text-sm">{product.materials}</p>
-            <p className="mt-2 text-sm text-muted">{product.care}</p>
-          </details>
-          <details className="border-t border-line py-4">
-            <summary className="micro cursor-pointer">Shipping & returns</summary>
-            <p className="mt-3 text-sm">
-              {product.shippingDays.min}–{product.shippingDays.max} business days
-              from the studio. 30-day returns, prepaid label. Complimentary gift
-              wrap in the bag.
-            </p>
-            <Link href="/shipping" className="mt-2 inline-block text-sm underline">
-              Full shipping table
-            </Link>
-          </details>
-          <div className="border-t border-line py-4">
+          <div className="mt-6">
             <Link href="/service" className="micro underline">
               Direct line to customer service
             </Link>
           </div>
-
-          <section className="border-t border-line py-6">
-            <p className="micro text-muted">FAQ for this piece</p>
-            <div className="mt-3">
-              {productFaq(product).map((item) => (
-                <details key={item.q} className="border-b border-line py-3">
-                  <summary className="cursor-pointer text-sm">{item.q}</summary>
-                  <p className="mt-2 text-sm text-muted">{item.a}</p>
-                </details>
-              ))}
-            </div>
-          </section>
         </div>
       </div>
 
@@ -327,47 +336,33 @@ export function ProductDetail({ product }: { product: Product }) {
               size: value,
               price: product.price,
             });
+            setAdded(true);
           }}
         />
       ) : null}
 
-      <section className="border-b border-line px-4 py-10 md:px-6">
-        <p className="micro text-muted">Worn, not styled · 4:5</p>
-        <div className="mt-4 grid grid-cols-2 gap-px bg-line md:grid-cols-4">
-          {productUgc(product)
-            .concat(
-              images.filter((image) => image.kind === "model" || image.kind === "detail"),
-            )
-            .slice(0, 4)
-            .map((image, index) => (
-              <div key={`${image.src}-ugc-${index}`} className="relative aspect-[4/5] bg-paper">
-                <Image src={image.src} alt={image.alt} fill className="object-cover" />
-              </div>
-            ))}
-        </div>
-      </section>
-
       {related.length > 0 ? (
-        <section className="px-4 py-10 md:px-6">
+        <section className="border-t border-line px-4 py-12 md:px-6">
           <p className="micro text-muted">Worn with</p>
-          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3">
             {related.map((item) => {
               const image = item.variants[0]?.images[0];
               return (
                 <Link key={item.id} href={`/product/${item.slug}`} className="group">
-                  <div className="relative aspect-[4/5] bg-paper-2">
+                  <div className="media-frame relative">
                     {image ? (
                       <Image
                         src={image.src}
                         alt={image.alt || item.name}
                         fill
                         sizes="(min-width: 768px) 25vw, 50vw"
-                        className="object-cover"
+                        className="object-cover object-[center_20%]"
                       />
                     ) : null}
                   </div>
-                  <p className="mt-2 text-sm">{item.name}</p>
-                  <p className="text-sm text-muted">{formatPrice(item.price)}</p>
+                  <p className="micro mt-3 text-muted">{item.line}</p>
+                  <p className="mt-1 text-sm">{item.name}</p>
+                  <p className="text-sm">{formatPrice(item.price)}</p>
                 </Link>
               );
             })}
@@ -376,7 +371,7 @@ export function ProductDetail({ product }: { product: Product }) {
       ) : null}
 
       <div
-        className="sticky bottom-0 z-20 flex items-center justify-between gap-3 border-t border-ink bg-paper px-4 py-3 md:hidden"
+        className="sticky bottom-0 z-20 flex items-center justify-between gap-3 border-t border-ink px-4 py-3 md:hidden"
         style={{ backgroundColor: hex, color: ctaColor }}
       >
         <span className="text-sm">{formatPrice(product.price)}</span>
@@ -424,8 +419,10 @@ function SizeGuide({
       <div className="mx-auto max-w-3xl border border-ink bg-paper p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="micro text-muted">Fit, not a popup afterthought</p>
-            <h2 className="display mt-2 text-4xl">Size guide</h2>
+            <p className="micro text-muted">Fit predictor</p>
+            <h2 className="mt-2 font-sans text-2xl font-medium tracking-tight">
+              Size guide
+            </h2>
           </div>
           <button type="button" className="micro" onClick={onClose}>
             Close
@@ -504,7 +501,13 @@ function SizeGuide({
                   )}
                 >
                   <td className="py-2 font-medium">{label}</td>
-                  <td>{unit === "in" ? row.chest ?? "—" : row.chest ? cmFromInches(row.chest) : "—"}</td>
+                  <td>
+                    {unit === "in"
+                      ? (row.chest ?? "—")
+                      : row.chest
+                        ? cmFromInches(row.chest)
+                        : "—"}
+                  </td>
                   <td>
                     {row.waist
                       ? unit === "in"
@@ -519,7 +522,9 @@ function SizeGuide({
                         : cmFromInches(row.hip)
                       : "—"}
                   </td>
-                  <td>{unit === "in" ? row.length : cmFromInches(row.length)}</td>
+                  <td>
+                    {unit === "in" ? row.length : cmFromInches(row.length)}
+                  </td>
                   <td className="py-2">
                     <button
                       type="button"

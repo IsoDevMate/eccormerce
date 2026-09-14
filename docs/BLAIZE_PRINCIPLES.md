@@ -5,8 +5,8 @@ Use these as **commercial constraints**, not as “make it look like Yeezy/Skims
 
 ## Small catalogue (&lt; ~50 SKUs)
 
-- The **grid is the store**. Do not force a marketing homepage click before products.
-- Gender split = **instant filter / tab** on the collection surface, not a separate splash.
+- The **grid is the store**. Index (`/`) can be codes-only for desire; commerce lives one click away on `/shop` — still no marketing splash before product.
+- Gender split = **instant filter / tab** on Index and Shop, not a separate splash.
 - Less choice + fewer clicks → higher conversion.
 
 ## Merchandising

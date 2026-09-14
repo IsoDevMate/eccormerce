@@ -26,7 +26,7 @@ export default async function ArchivePage({
         kicker: "House note",
         title: "Every line, one grid.",
         body: "Filter by who wears it, then by cut. The clothes stay above the fold.",
-        href: "/",
+        href: "/shop",
         image:
           "https://images.unsplash.com/photo-1441984904996-e0b6ba207e31?auto=format&fit=crop&w=1200&q=70",
       }}
