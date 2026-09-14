@@ -384,12 +384,25 @@ export function ProductDetail({ product }: { product: Product }) {
       ) : null}
 
       <div
-        className="sticky bottom-0 z-20 flex items-center justify-between gap-3 border-t border-ink px-4 py-3 md:hidden"
+        className="sticky bottom-0 z-20 border-t border-ink md:hidden"
         style={{ backgroundColor: hex, color: ctaColor }}
       >
-        <span className="text-sm">{formatPrice(product.price)}</span>
-        <button type="button" onClick={add} className="text-sm underline">
-          {size ? "Add to bag" : "Select size"}
+        <button
+          type="button"
+          onClick={() => {
+            if (product.comingSoon) {
+              setWaitlistOpen(true);
+              return;
+            }
+            add();
+          }}
+          className="flex w-full items-center justify-center gap-2 px-4 py-3.5 text-sm pressable"
+        >
+          {product.comingSoon
+            ? "Notify me at drop"
+            : size
+              ? `Add to bag — ${formatPrice(product.price)}`
+              : "Select a size"}
         </button>
       </div>
     </div>

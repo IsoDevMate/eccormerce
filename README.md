@@ -13,7 +13,8 @@ Next.js 15 + TypeScript + Tailwind 4. Small-catalogue house: **Index first, shop
 | Doc | What |
 |-----|------|
 | [`docs/BLAIZE_PRINCIPLES.md`](docs/BLAIZE_PRINCIPLES.md) | Commercial principles from Blaize / Yeezy–Skims breakdown (not brand clones) |
-| [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md) | Playwright screenshots + frame extract — **required before calling UI done** |
+| [`docs/BLAIZE_BEST_WEBSITES.md`](docs/BLAIZE_BEST_WEBSITES.md) | Full *best websites* transcript + max-out build checklist |
+| [`docs/VISUAL_QA.md`](docs/VISUAL_QA.md) | Playwright screenshots + interaction QA — **required before calling UI done** |
 | [`docs/STATUS.md`](docs/STATUS.md) | What’s shipped, what’s still open |
 
 ---

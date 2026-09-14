@@ -579,6 +579,14 @@ function ProductCard({
           )}
         </Link>
 
+        {allOut || product.comingSoon ? (
+          <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center bg-paper/55">
+            <span className="micro bg-ink px-3 py-1.5 text-paper">
+              {product.comingSoon ? "Coming soon" : "Sold out"}
+            </span>
+          </div>
+        ) : null}
+
         {!product.comingSoon ? (
           <div
             className={cn(

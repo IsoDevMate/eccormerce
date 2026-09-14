@@ -41,3 +41,5 @@ Ask of every screen:
 6. Friction — remove chrome that doesn’t sell or reassure?
 
 Then verify with Playwright — see [`VISUAL_QA.md`](./VISUAL_QA.md). Current shipped vs open: [`STATUS.md`](./STATUS.md).
+
+Expanded build notes from the *best websites* breakdown (Acne, A24, On, Little Tokyo, etc.): [`BLAIZE_BEST_WEBSITES.md`](./BLAIZE_BEST_WEBSITES.md).

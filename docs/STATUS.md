@@ -11,8 +11,12 @@ Last docs update: 2026-09-14. Branch: `main`.
 - Checkout validation + thank-you (no `alert`)
 - PDP: swatch-themed ATC, size guide / fit predictor, sticky mobile ATC, shipping honesty
 - PLP: chip filters (sort / category / color / size), hover crossfade + swatch preview + quick add + wishlist + quick view
-- Catalog: unique Unsplash slots; 19 dead IDs replaced; placeholder globe videos removed
-- Agent tooling: `npm run visual:smoke`, `npm run visual:qa`, Blaize principles + visual QA docs
+- SKIMS-style loading skeletons on Index, Shop, New, gender/archive PLPs, and PDP
+- 404 sells: product suggestions from the archive
+- Designed sold-out / coming-soon card overlay + waitlist
+- Agent tooling: `npm run visual:smoke`, `npm run visual:qa`, Blaize principles + best-websites transcript docs
+
+Transcript max-out (eat/spit): [`BLAIZE_BEST_WEBSITES.md`](./BLAIZE_BEST_WEBSITES.md).
 
 ## Open (do not pretend these are done)
 
